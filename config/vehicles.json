@@ -1,0 +1,54 @@
+{
+  "vehicles": [
+    {
+      "vehicle_id": "LHD-01",
+      "name": "Scooptram Alpha",
+      "kind": "lhd",
+      "driver_worker_id": "W05",
+      "start_edge": "L2_south_0",
+      "speed_mps": 3.2,
+      "load_node_ids": ["L2_S2", "L2_E3", "L2_N2", "L2_W3"],
+      "dump_node_ids": ["L2_LIFT", "L2_WORK"]
+    },
+    {
+      "vehicle_id": "LHD-02",
+      "name": "Scooptram Bravo",
+      "kind": "lhd",
+      "driver_worker_id": "W14",
+      "start_edge": "L3_ring_0",
+      "speed_mps": 3.0,
+      "load_node_ids": ["L3_MINE", "L4_MINE", "L4_E3", "L4_N2"],
+      "dump_node_ids": ["L3_LIFT", "L4_LIFT"]
+    },
+    {
+      "vehicle_id": "TRK-01",
+      "name": "Ore Trailer 1",
+      "kind": "ore_trailer",
+      "driver_worker_id": "W03",
+      "start_edge": "L1_loop_0",
+      "speed_mps": 2.6,
+      "load_node_ids": ["L1_MINE_E", "L1_MINE_W", "L1_WORK"],
+      "dump_node_ids": ["L1_LIFT"]
+    },
+    {
+      "vehicle_id": "TRK-02",
+      "name": "Ore Trailer 2",
+      "kind": "ore_trailer",
+      "driver_worker_id": null,
+      "start_edge": "L2_spine_0",
+      "speed_mps": 2.4,
+      "load_node_ids": ["L2_E3", "L2_W3", "L2_N2"],
+      "dump_node_ids": ["L2_LIFT"]
+    },
+    {
+      "vehicle_id": "TRK-03",
+      "name": "Ore Trailer 3",
+      "kind": "ore_trailer",
+      "driver_worker_id": null,
+      "start_edge": "L4_arm_0",
+      "speed_mps": 2.5,
+      "load_node_ids": ["L4_MINE", "L4_E3", "L4_N2"],
+      "dump_node_ids": ["L4_LIFT", "L3_LIFT"]
+    }
+  ]
+}

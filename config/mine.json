@@ -1,0 +1,2605 @@
+{
+  "name": "Smart Mine 3D",
+  "blueprint": "ChatGPT Image Sep 21, 2026 \u2014 multi-level shafts + unique level footprints",
+  "coordinate_system": {
+    "x": "east_west_m",
+    "y": "elevation_m",
+    "z": "north_south_m",
+    "surface_y": 0.0
+  },
+  "levels": [
+    {
+      "id": "SURFACE",
+      "name": "Surface",
+      "depth_m": 0.0,
+      "label": "Surface"
+    },
+    {
+      "id": "L1",
+      "name": "Level 1",
+      "depth_m": -100.0,
+      "label": "Level 1 (-100m)"
+    },
+    {
+      "id": "L2",
+      "name": "Level 2",
+      "depth_m": -250.0,
+      "label": "Level 2 (-250m)"
+    },
+    {
+      "id": "L3",
+      "name": "Level 3",
+      "depth_m": -400.0,
+      "label": "Level 3 (-400m)"
+    },
+    {
+      "id": "L4",
+      "name": "Level 4",
+      "depth_m": -550.0,
+      "label": "Level 4 (-550m)"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "SURFACE_MAIN",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "type": "surface",
+      "level_id": "SURFACE",
+      "depth_m": 0.0
+    },
+    {
+      "id": "SURFACE_VENT",
+      "x": 55.0,
+      "y": 0.0,
+      "z": 45.0,
+      "type": "surface",
+      "level_id": "SURFACE",
+      "depth_m": 0.0
+    },
+    {
+      "id": "SURFACE_ESCAPE",
+      "x": -70.0,
+      "y": 0.0,
+      "z": -55.0,
+      "type": "surface",
+      "level_id": "SURFACE",
+      "depth_m": 0.0
+    },
+    {
+      "id": "L1_LIFT",
+      "x": 0.0,
+      "y": -100.0,
+      "z": 0.0,
+      "type": "lift_station",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_VENT",
+      "x": 55.0,
+      "y": -100.0,
+      "z": 45.0,
+      "type": "vent_station",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_ESCAPE",
+      "x": -70.0,
+      "y": -100.0,
+      "z": -55.0,
+      "type": "escape_station",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L2_LIFT",
+      "x": 0.0,
+      "y": -250.0,
+      "z": 0.0,
+      "type": "lift_station",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_VENT",
+      "x": 55.0,
+      "y": -250.0,
+      "z": 45.0,
+      "type": "vent_station",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_ESCAPE",
+      "x": -70.0,
+      "y": -250.0,
+      "z": -55.0,
+      "type": "escape_station",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L3_LIFT",
+      "x": 0.0,
+      "y": -400.0,
+      "z": 0.0,
+      "type": "lift_station",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_VENT",
+      "x": 55.0,
+      "y": -400.0,
+      "z": 45.0,
+      "type": "vent_station",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_ESCAPE",
+      "x": -70.0,
+      "y": -400.0,
+      "z": -55.0,
+      "type": "escape_station",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L4_LIFT",
+      "x": 0.0,
+      "y": -550.0,
+      "z": 0.0,
+      "type": "lift_station",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L4_VENT",
+      "x": 55.0,
+      "y": -550.0,
+      "z": 45.0,
+      "type": "vent_station",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L4_ESCAPE",
+      "x": -70.0,
+      "y": -550.0,
+      "z": -55.0,
+      "type": "escape_station",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L1_N",
+      "x": 0.0,
+      "y": -100.0,
+      "z": 90.0,
+      "type": "intersection",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_N2",
+      "x": 35.0,
+      "y": -100.0,
+      "z": 90.0,
+      "type": "intersection",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_NE",
+      "x": 80.0,
+      "y": -100.0,
+      "z": 55.0,
+      "type": "intersection",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_E",
+      "x": 95.0,
+      "y": -100.0,
+      "z": 0.0,
+      "type": "intersection",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_SE",
+      "x": 70.0,
+      "y": -100.0,
+      "z": -60.0,
+      "type": "intersection",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_S",
+      "x": 0.0,
+      "y": -100.0,
+      "z": -85.0,
+      "type": "intersection",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_SW",
+      "x": -65.0,
+      "y": -100.0,
+      "z": -55.0,
+      "type": "intersection",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_W",
+      "x": -95.0,
+      "y": -100.0,
+      "z": 10.0,
+      "type": "intersection",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_NW",
+      "x": -55.0,
+      "y": -100.0,
+      "z": 70.0,
+      "type": "intersection",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_LOOP_E",
+      "x": 40.0,
+      "y": -100.0,
+      "z": 25.0,
+      "type": "intersection",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_LOOP_S",
+      "x": 25.0,
+      "y": -100.0,
+      "z": -30.0,
+      "type": "intersection",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_LOOP_W",
+      "x": -30.0,
+      "y": -100.0,
+      "z": -15.0,
+      "type": "intersection",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_MINE_E",
+      "x": 130.0,
+      "y": -100.0,
+      "z": 20.0,
+      "type": "work_zone",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_MINE_W",
+      "x": -130.0,
+      "y": -100.0,
+      "z": 40.0,
+      "type": "work_zone",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_WORK",
+      "x": 50.0,
+      "y": -100.0,
+      "z": -90.0,
+      "type": "work_zone",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L1_REFUGE",
+      "x": -25.0,
+      "y": -100.0,
+      "z": 35.0,
+      "type": "refuge",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "id": "L2_E1",
+      "x": 50.0,
+      "y": -250.0,
+      "z": 10.0,
+      "type": "intersection",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_E2",
+      "x": 110.0,
+      "y": -250.0,
+      "z": 15.0,
+      "type": "intersection",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_E3",
+      "x": 160.0,
+      "y": -250.0,
+      "z": 5.0,
+      "type": "work_zone",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_W1",
+      "x": -50.0,
+      "y": -250.0,
+      "z": -5.0,
+      "type": "intersection",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_W2",
+      "x": -110.0,
+      "y": -250.0,
+      "z": 0.0,
+      "type": "intersection",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_W3",
+      "x": -160.0,
+      "y": -250.0,
+      "z": -10.0,
+      "type": "work_zone",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_N1",
+      "x": 20.0,
+      "y": -250.0,
+      "z": 70.0,
+      "type": "intersection",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_N2",
+      "x": 25.0,
+      "y": -250.0,
+      "z": 120.0,
+      "type": "work_zone",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_S1",
+      "x": -15.0,
+      "y": -250.0,
+      "z": -70.0,
+      "type": "intersection",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_S2",
+      "x": -20.0,
+      "y": -250.0,
+      "z": -125.0,
+      "type": "work_zone",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_BRANCH",
+      "x": 90.0,
+      "y": -250.0,
+      "z": -60.0,
+      "type": "intersection",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_WORK",
+      "x": -80.0,
+      "y": -250.0,
+      "z": 70.0,
+      "type": "workshop",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_REFUGE",
+      "x": 15.0,
+      "y": -250.0,
+      "z": -20.0,
+      "type": "refuge",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L2_EMERG",
+      "x": 120.0,
+      "y": -250.0,
+      "z": 60.0,
+      "type": "emergency",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "L3_N",
+      "x": 0.0,
+      "y": -400.0,
+      "z": 80.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_NE",
+      "x": 60.0,
+      "y": -400.0,
+      "z": 70.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_E",
+      "x": 90.0,
+      "y": -400.0,
+      "z": 0.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_SE",
+      "x": 55.0,
+      "y": -400.0,
+      "z": -70.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_S",
+      "x": 0.0,
+      "y": -400.0,
+      "z": -80.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_SW",
+      "x": -60.0,
+      "y": -400.0,
+      "z": -65.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_W",
+      "x": -100.0,
+      "y": -400.0,
+      "z": 0.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_NW",
+      "x": -70.0,
+      "y": -400.0,
+      "z": 65.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_C_N",
+      "x": 0.0,
+      "y": -400.0,
+      "z": 35.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_C_E",
+      "x": 40.0,
+      "y": -400.0,
+      "z": 0.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_C_S",
+      "x": 0.0,
+      "y": -400.0,
+      "z": -35.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_C_W",
+      "x": -40.0,
+      "y": -400.0,
+      "z": 0.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_LOOP1",
+      "x": -130.0,
+      "y": -400.0,
+      "z": 40.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_LOOP2",
+      "x": -150.0,
+      "y": -400.0,
+      "z": 0.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_LOOP3",
+      "x": -130.0,
+      "y": -400.0,
+      "z": -40.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_WORK",
+      "x": 70.0,
+      "y": -400.0,
+      "z": 40.0,
+      "type": "workshop",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_REFUGE",
+      "x": -20.0,
+      "y": -400.0,
+      "z": 10.0,
+      "type": "refuge",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_EMERG",
+      "x": 40.0,
+      "y": -400.0,
+      "z": -50.0,
+      "type": "emergency",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L3_MINE",
+      "x": 120.0,
+      "y": -400.0,
+      "z": -30.0,
+      "type": "work_zone",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "id": "L4_N",
+      "x": 0.0,
+      "y": -550.0,
+      "z": 100.0,
+      "type": "intersection",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L4_N2",
+      "x": 0.0,
+      "y": -550.0,
+      "z": 150.0,
+      "type": "work_zone",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L4_E",
+      "x": 80.0,
+      "y": -550.0,
+      "z": 0.0,
+      "type": "intersection",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L4_E2",
+      "x": 130.0,
+      "y": -550.0,
+      "z": 10.0,
+      "type": "intersection",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L4_E3",
+      "x": 170.0,
+      "y": -550.0,
+      "z": -15.0,
+      "type": "work_zone",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L4_W",
+      "x": -80.0,
+      "y": -550.0,
+      "z": 5.0,
+      "type": "intersection",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L4_W2",
+      "x": -130.0,
+      "y": -550.0,
+      "z": 0.0,
+      "type": "intersection",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L4_S_STUB",
+      "x": 10.0,
+      "y": -550.0,
+      "z": -40.0,
+      "type": "intersection",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L4_WORK",
+      "x": 60.0,
+      "y": -550.0,
+      "z": 50.0,
+      "type": "workshop",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L4_REFUGE",
+      "x": -40.0,
+      "y": -550.0,
+      "z": 20.0,
+      "type": "refuge",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "L4_MINE",
+      "x": -100.0,
+      "y": -550.0,
+      "z": -50.0,
+      "type": "work_zone",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "id": "RAMP_L2",
+      "x": 90.0,
+      "y": -250.0,
+      "z": -40.0,
+      "type": "intersection",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "id": "RAMP_L3",
+      "x": 90.0,
+      "y": -400.0,
+      "z": -40.0,
+      "type": "intersection",
+      "level_id": "L3",
+      "depth_m": -400.0
+    }
+  ],
+  "edges": [
+    {
+      "id": "MAIN_SURFACE_MAIN_to_L1",
+      "start": "SURFACE_MAIN",
+      "end": "L1_LIFT",
+      "length": 100.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "MAIN_SHAFT",
+      "level_id": null,
+      "kind": "shaft"
+    },
+    {
+      "id": "VENT_SURFACE_VENT_to_L1",
+      "start": "SURFACE_VENT",
+      "end": "L1_VENT",
+      "length": 100.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "VENT_SHAFT",
+      "level_id": null,
+      "kind": "vent_shaft"
+    },
+    {
+      "id": "ESC_SURFACE_ESCAPE_to_L1",
+      "start": "SURFACE_ESCAPE",
+      "end": "L1_ESCAPE",
+      "length": 100.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": null,
+      "kind": "escape_shaft"
+    },
+    {
+      "id": "MAIN_L1_LIFT_to_L2",
+      "start": "L1_LIFT",
+      "end": "L2_LIFT",
+      "length": 150.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "MAIN_SHAFT",
+      "level_id": null,
+      "kind": "shaft"
+    },
+    {
+      "id": "VENT_L1_VENT_to_L2",
+      "start": "L1_VENT",
+      "end": "L2_VENT",
+      "length": 150.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "VENT_SHAFT",
+      "level_id": null,
+      "kind": "vent_shaft"
+    },
+    {
+      "id": "ESC_L1_ESCAPE_to_L2",
+      "start": "L1_ESCAPE",
+      "end": "L2_ESCAPE",
+      "length": 150.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": null,
+      "kind": "escape_shaft"
+    },
+    {
+      "id": "MAIN_L2_LIFT_to_L3",
+      "start": "L2_LIFT",
+      "end": "L3_LIFT",
+      "length": 150.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "MAIN_SHAFT",
+      "level_id": null,
+      "kind": "shaft"
+    },
+    {
+      "id": "VENT_L2_VENT_to_L3",
+      "start": "L2_VENT",
+      "end": "L3_VENT",
+      "length": 150.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "VENT_SHAFT",
+      "level_id": null,
+      "kind": "vent_shaft"
+    },
+    {
+      "id": "ESC_L2_ESCAPE_to_L3",
+      "start": "L2_ESCAPE",
+      "end": "L3_ESCAPE",
+      "length": 150.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": null,
+      "kind": "escape_shaft"
+    },
+    {
+      "id": "MAIN_L3_LIFT_to_L4",
+      "start": "L3_LIFT",
+      "end": "L4_LIFT",
+      "length": 150.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "MAIN_SHAFT",
+      "level_id": null,
+      "kind": "shaft"
+    },
+    {
+      "id": "VENT_L3_VENT_to_L4",
+      "start": "L3_VENT",
+      "end": "L4_VENT",
+      "length": 150.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "VENT_SHAFT",
+      "level_id": null,
+      "kind": "vent_shaft"
+    },
+    {
+      "id": "ESC_L3_ESCAPE_to_L4",
+      "start": "L3_ESCAPE",
+      "end": "L4_ESCAPE",
+      "length": 150.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": null,
+      "kind": "escape_shaft"
+    },
+    {
+      "id": "L1_loop_0",
+      "start": "L1_LIFT",
+      "end": "L1_LOOP_E",
+      "length": 47.17,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_loop_1",
+      "start": "L1_LOOP_E",
+      "end": "L1_N2",
+      "length": 65.19,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_loop_2",
+      "start": "L1_N2",
+      "end": "L1_N",
+      "length": 35.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_loop_3",
+      "start": "L1_N",
+      "end": "L1_NW",
+      "length": 58.52,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_loop_4",
+      "start": "L1_NW",
+      "end": "L1_REFUGE",
+      "length": 46.1,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_loop_5",
+      "start": "L1_REFUGE",
+      "end": "L1_LOOP_W",
+      "length": 50.25,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_loop_6",
+      "start": "L1_LOOP_W",
+      "end": "L1_LOOP_S",
+      "length": 57.01,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_loop_7",
+      "start": "L1_LOOP_S",
+      "end": "L1_LIFT",
+      "length": 39.05,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_east_0",
+      "start": "L1_LOOP_E",
+      "end": "L1_NE",
+      "length": 50.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_EAST",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_east_1",
+      "start": "L1_NE",
+      "end": "L1_E",
+      "length": 57.01,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_EAST",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_east_2",
+      "start": "L1_E",
+      "end": "L1_MINE_E",
+      "length": 40.31,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_EAST",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_south_0",
+      "start": "L1_LOOP_S",
+      "end": "L1_SE",
+      "length": 54.08,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_SOUTH",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_south_1",
+      "start": "L1_SE",
+      "end": "L1_S",
+      "length": 74.33,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_SOUTH",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_south_2",
+      "start": "L1_S",
+      "end": "L1_WORK",
+      "length": 50.25,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_SOUTH",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_west_0",
+      "start": "L1_LOOP_W",
+      "end": "L1_SW",
+      "length": 53.15,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_WEST",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_west_1",
+      "start": "L1_SW",
+      "end": "L1_W",
+      "length": 71.59,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_WEST",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_west_2",
+      "start": "L1_W",
+      "end": "L1_MINE_W",
+      "length": 46.1,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_WEST",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_to_vent",
+      "start": "L1_NE",
+      "end": "L1_VENT",
+      "length": 26.93,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_LINK",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L1_to_esc",
+      "start": "L1_SW",
+      "end": "L1_ESCAPE",
+      "length": 5.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L1_LINK",
+      "level_id": "L1",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_spine_0",
+      "start": "L2_W3",
+      "end": "L2_W2",
+      "length": 50.99,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_SPINE",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_spine_1",
+      "start": "L2_W2",
+      "end": "L2_W1",
+      "length": 60.21,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_SPINE",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_spine_2",
+      "start": "L2_W1",
+      "end": "L2_LIFT",
+      "length": 50.25,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_SPINE",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_spine_3",
+      "start": "L2_LIFT",
+      "end": "L2_E1",
+      "length": 50.99,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_SPINE",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_spine_4",
+      "start": "L2_E1",
+      "end": "L2_E2",
+      "length": 60.21,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_SPINE",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_spine_5",
+      "start": "L2_E2",
+      "end": "L2_E3",
+      "length": 50.99,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_SPINE",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_south_0",
+      "start": "L2_LIFT",
+      "end": "L2_REFUGE",
+      "length": 25.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_SOUTH",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_south_1",
+      "start": "L2_REFUGE",
+      "end": "L2_S1",
+      "length": 58.31,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_SOUTH",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_south_2",
+      "start": "L2_S1",
+      "end": "L2_S2",
+      "length": 55.23,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_SOUTH",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_north_0",
+      "start": "L2_E1",
+      "end": "L2_N1",
+      "length": 67.08,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_NORTH",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_north_1",
+      "start": "L2_N1",
+      "end": "L2_N2",
+      "length": 50.25,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_NORTH",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_br_0",
+      "start": "L2_E2",
+      "end": "L2_BRANCH",
+      "length": 77.62,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_BRANCH",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_wk_0",
+      "start": "L2_W1",
+      "end": "L2_WORK",
+      "length": 80.78,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_WORK",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_em_0",
+      "start": "L2_E2",
+      "end": "L2_EMERG",
+      "length": 46.1,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_EMERG",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_to_vent",
+      "start": "L2_E1",
+      "end": "L2_VENT",
+      "length": 35.36,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_LINK",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L2_to_esc",
+      "start": "L2_W2",
+      "end": "L2_ESCAPE",
+      "length": 68.01,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_LINK",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ns_0",
+      "start": "L3_C_N",
+      "end": "L3_LIFT",
+      "length": 35.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_NS",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ns_1",
+      "start": "L3_LIFT",
+      "end": "L3_C_S",
+      "length": 35.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_NS",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ew_0",
+      "start": "L3_C_W",
+      "end": "L3_LIFT",
+      "length": 40.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_EW",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ew_1",
+      "start": "L3_LIFT",
+      "end": "L3_C_E",
+      "length": 40.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_EW",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ring_0",
+      "start": "L3_N",
+      "end": "L3_NE",
+      "length": 60.83,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ring_1",
+      "start": "L3_NE",
+      "end": "L3_E",
+      "length": 76.16,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ring_2",
+      "start": "L3_E",
+      "end": "L3_SE",
+      "length": 78.26,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ring_3",
+      "start": "L3_SE",
+      "end": "L3_S",
+      "length": 55.9,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ring_4",
+      "start": "L3_S",
+      "end": "L3_SW",
+      "length": 61.85,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ring_5",
+      "start": "L3_SW",
+      "end": "L3_W",
+      "length": 76.32,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ring_6",
+      "start": "L3_W",
+      "end": "L3_NW",
+      "length": 71.59,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ring_7",
+      "start": "L3_NW",
+      "end": "L3_N",
+      "length": 71.59,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_spoke_N",
+      "start": "L3_N",
+      "end": "L3_C_N",
+      "length": 45.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_SPOKE",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_spoke_E",
+      "start": "L3_E",
+      "end": "L3_C_E",
+      "length": 50.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_SPOKE",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_spoke_S",
+      "start": "L3_S",
+      "end": "L3_C_S",
+      "length": 45.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_SPOKE",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_spoke_W",
+      "start": "L3_W",
+      "end": "L3_C_W",
+      "length": 60.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_SPOKE",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_wloop_0",
+      "start": "L3_W",
+      "end": "L3_LOOP1",
+      "length": 50.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_WLOOP",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_wloop_1",
+      "start": "L3_LOOP1",
+      "end": "L3_LOOP2",
+      "length": 44.72,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_WLOOP",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_wloop_2",
+      "start": "L3_LOOP2",
+      "end": "L3_LOOP3",
+      "length": 44.72,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_WLOOP",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_wloop_3",
+      "start": "L3_LOOP3",
+      "end": "L3_SW",
+      "length": 74.33,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_WLOOP",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_work",
+      "start": "L3_NE",
+      "end": "L3_WORK",
+      "length": 31.62,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_WORK",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_ref",
+      "start": "L3_LIFT",
+      "end": "L3_REFUGE",
+      "length": 22.36,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_REFUGE",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_em",
+      "start": "L3_SE",
+      "end": "L3_EMERG",
+      "length": 25.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_EMERG",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_mine",
+      "start": "L3_E",
+      "end": "L3_MINE",
+      "length": 42.43,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_MINE",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_to_vent",
+      "start": "L3_NE",
+      "end": "L3_VENT",
+      "length": 25.5,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_LINK",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L3_to_esc",
+      "start": "L3_SW",
+      "end": "L3_ESCAPE",
+      "length": 14.14,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_LINK",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_stem_0",
+      "start": "L4_N2",
+      "end": "L4_N",
+      "length": 50.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_STEM",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_stem_1",
+      "start": "L4_N",
+      "end": "L4_LIFT",
+      "length": 100.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_STEM",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_stem_2",
+      "start": "L4_LIFT",
+      "end": "L4_S_STUB",
+      "length": 41.23,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_STEM",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_arm_0",
+      "start": "L4_W2",
+      "end": "L4_W",
+      "length": 50.25,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_ARM",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_arm_1",
+      "start": "L4_W",
+      "end": "L4_LIFT",
+      "length": 80.16,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_ARM",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_arm_2",
+      "start": "L4_LIFT",
+      "end": "L4_E",
+      "length": 80.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_ARM",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_arm_3",
+      "start": "L4_E",
+      "end": "L4_E2",
+      "length": 50.99,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_ARM",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_arm_4",
+      "start": "L4_E2",
+      "end": "L4_E3",
+      "length": 47.17,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_ARM",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_work",
+      "start": "L4_E",
+      "end": "L4_WORK",
+      "length": 53.85,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_WORK",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_ref",
+      "start": "L4_W",
+      "end": "L4_REFUGE",
+      "length": 42.72,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_REFUGE",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_mine",
+      "start": "L4_W2",
+      "end": "L4_MINE",
+      "length": 58.31,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_MINE",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_to_vent",
+      "start": "L4_E",
+      "end": "L4_VENT",
+      "length": 51.48,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_LINK",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "L4_to_esc",
+      "start": "L4_W2",
+      "end": "L4_ESCAPE",
+      "length": 81.39,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L4_LINK",
+      "level_id": "L4",
+      "kind": "tunnel"
+    },
+    {
+      "id": "RAMP_L2_join",
+      "start": "RAMP_L2",
+      "end": "L2_BRANCH",
+      "length": 20.0,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L2_BRANCH",
+      "level_id": "L2",
+      "kind": "tunnel"
+    },
+    {
+      "id": "RAMP_L3_join",
+      "start": "RAMP_L3",
+      "end": "L3_EMERG",
+      "length": 50.99,
+      "direction": "both",
+      "speed_limit": 1.2,
+      "zone_id": "L3_EMERG",
+      "level_id": "L3",
+      "kind": "tunnel"
+    },
+    {
+      "id": "RAMP_L2_L3",
+      "start": "RAMP_L2",
+      "end": "RAMP_L3",
+      "length": 150.0,
+      "direction": "both",
+      "speed_limit": 0.85,
+      "zone_id": "DECLINE_RAMP",
+      "level_id": null,
+      "kind": "ramp"
+    }
+  ],
+  "portals": [],
+  "zones": [
+    "DECLINE_RAMP",
+    "ESCAPE_SHAFT",
+    "L1_EAST",
+    "L1_LINK",
+    "L1_LOOP",
+    "L1_SOUTH",
+    "L1_WEST",
+    "L2_BRANCH",
+    "L2_EMERG",
+    "L2_LINK",
+    "L2_NORTH",
+    "L2_SOUTH",
+    "L2_SPINE",
+    "L2_WORK",
+    "L3_EMERG",
+    "L3_EW",
+    "L3_LINK",
+    "L3_MINE",
+    "L3_NS",
+    "L3_REFUGE",
+    "L3_RING",
+    "L3_SPOKE",
+    "L3_WLOOP",
+    "L3_WORK",
+    "L4_ARM",
+    "L4_LINK",
+    "L4_MINE",
+    "L4_REFUGE",
+    "L4_STEM",
+    "L4_WORK",
+    "MAIN_SHAFT",
+    "VENT_SHAFT"
+  ],
+  "gateway_locations": [
+    {
+      "gateway_id": "GW-SURF",
+      "name": "Surface collar LoRa",
+      "x": 12.0,
+      "y": 0.0,
+      "z": 8.0,
+      "zone_id": "SURFACE",
+      "level_id": "SURFACE",
+      "depth_m": 0.0
+    },
+    {
+      "gateway_id": "GW-L1-01",
+      "name": "Level 1 \u00b7 intersection",
+      "x": 95.0,
+      "y": -100.0,
+      "z": 0.0,
+      "zone_id": "L1_EAST",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-02",
+      "name": "Level 1 \u00b7 escape station",
+      "x": -70.0,
+      "y": -100.0,
+      "z": -55.0,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-03",
+      "name": "Level 1 \u00b7 lift station",
+      "x": 0.0,
+      "y": -100.0,
+      "z": 0.0,
+      "zone_id": "MAIN_SHAFT",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-04",
+      "name": "Level 1 \u00b7 intersection",
+      "x": 40.0,
+      "y": -100.0,
+      "z": 25.0,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-05",
+      "name": "Level 1 \u00b7 work zone",
+      "x": 130.0,
+      "y": -100.0,
+      "z": 20.0,
+      "zone_id": "L1_EAST",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-06",
+      "name": "Level 1 \u00b7 work zone",
+      "x": -130.0,
+      "y": -100.0,
+      "z": 40.0,
+      "zone_id": "L1_WEST",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-07",
+      "name": "Level 1 \u00b7 intersection",
+      "x": 0.0,
+      "y": -100.0,
+      "z": 90.0,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-08",
+      "name": "Level 1 \u00b7 intersection",
+      "x": 80.0,
+      "y": -100.0,
+      "z": 55.0,
+      "zone_id": "L1_EAST",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-09",
+      "name": "Level 1 \u00b7 intersection",
+      "x": -55.0,
+      "y": -100.0,
+      "z": 70.0,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-10",
+      "name": "Level 1 \u00b7 refuge",
+      "x": -25.0,
+      "y": -100.0,
+      "z": 35.0,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-11",
+      "name": "Level 1 \u00b7 intersection",
+      "x": 0.0,
+      "y": -100.0,
+      "z": -85.0,
+      "zone_id": "L1_SOUTH",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-12",
+      "name": "Level 1 \u00b7 intersection",
+      "x": 70.0,
+      "y": -100.0,
+      "z": -60.0,
+      "zone_id": "L1_SOUTH",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-13",
+      "name": "Level 1 \u00b7 intersection",
+      "x": -95.0,
+      "y": -100.0,
+      "z": 10.0,
+      "zone_id": "L1_WEST",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L1-14",
+      "name": "Level 1 \u00b7 work zone",
+      "x": 50.0,
+      "y": -100.0,
+      "z": -90.0,
+      "zone_id": "L1_SOUTH",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-L2-01",
+      "name": "Level 2 \u00b7 intersection",
+      "x": 90.0,
+      "y": -250.0,
+      "z": -60.0,
+      "zone_id": "L2_BRANCH",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-02",
+      "name": "Level 2 \u00b7 intersection",
+      "x": 50.0,
+      "y": -250.0,
+      "z": 10.0,
+      "zone_id": "L2_SPINE",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-03",
+      "name": "Level 2 \u00b7 intersection",
+      "x": 110.0,
+      "y": -250.0,
+      "z": 15.0,
+      "zone_id": "L2_SPINE",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-04",
+      "name": "Level 2 \u00b7 work zone",
+      "x": 160.0,
+      "y": -250.0,
+      "z": 5.0,
+      "zone_id": "L2_SPINE",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-05",
+      "name": "Level 2 \u00b7 emergency",
+      "x": 120.0,
+      "y": -250.0,
+      "z": 60.0,
+      "zone_id": "L2_EMERG",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-06",
+      "name": "Level 2 \u00b7 escape station",
+      "x": -70.0,
+      "y": -250.0,
+      "z": -55.0,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-07",
+      "name": "Level 2 \u00b7 lift station",
+      "x": 0.0,
+      "y": -250.0,
+      "z": 0.0,
+      "zone_id": "MAIN_SHAFT",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-08",
+      "name": "Level 2 \u00b7 intersection",
+      "x": 20.0,
+      "y": -250.0,
+      "z": 70.0,
+      "zone_id": "L2_NORTH",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-09",
+      "name": "Level 2 \u00b7 work zone",
+      "x": 25.0,
+      "y": -250.0,
+      "z": 120.0,
+      "zone_id": "L2_NORTH",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-10",
+      "name": "Level 2 \u00b7 intersection",
+      "x": -15.0,
+      "y": -250.0,
+      "z": -70.0,
+      "zone_id": "L2_SOUTH",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-11",
+      "name": "Level 2 \u00b7 work zone",
+      "x": -20.0,
+      "y": -250.0,
+      "z": -125.0,
+      "zone_id": "L2_SOUTH",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-12",
+      "name": "Level 2 \u00b7 vent station",
+      "x": 55.0,
+      "y": -250.0,
+      "z": 45.0,
+      "zone_id": "VENT_SHAFT",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-13",
+      "name": "Level 2 \u00b7 intersection",
+      "x": -50.0,
+      "y": -250.0,
+      "z": -5.0,
+      "zone_id": "L2_SPINE",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-14",
+      "name": "Level 2 \u00b7 intersection",
+      "x": -110.0,
+      "y": -250.0,
+      "z": 0.0,
+      "zone_id": "L2_SPINE",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-15",
+      "name": "Level 2 \u00b7 work zone",
+      "x": -160.0,
+      "y": -250.0,
+      "z": -10.0,
+      "zone_id": "L2_SPINE",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L2-16",
+      "name": "Level 2 \u00b7 workshop",
+      "x": -80.0,
+      "y": -250.0,
+      "z": 70.0,
+      "zone_id": "L2_WORK",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-L3-01",
+      "name": "Level 3 \u00b7 intersection",
+      "x": 40.0,
+      "y": -400.0,
+      "z": 0.0,
+      "zone_id": "L3_EW",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-02",
+      "name": "Level 3 \u00b7 intersection",
+      "x": 0.0,
+      "y": -400.0,
+      "z": 35.0,
+      "zone_id": "L3_NS",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-03",
+      "name": "Level 3 \u00b7 intersection",
+      "x": 0.0,
+      "y": -400.0,
+      "z": -35.0,
+      "zone_id": "L3_NS",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-04",
+      "name": "Level 3 \u00b7 intersection",
+      "x": -40.0,
+      "y": -400.0,
+      "z": 0.0,
+      "zone_id": "L3_EW",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-05",
+      "name": "Level 3 \u00b7 intersection",
+      "x": 90.0,
+      "y": -400.0,
+      "z": 0.0,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-06",
+      "name": "Level 3 \u00b7 emergency",
+      "x": 40.0,
+      "y": -400.0,
+      "z": -50.0,
+      "zone_id": "L3_EMERG",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-07",
+      "name": "Level 3 \u00b7 escape station",
+      "x": -70.0,
+      "y": -400.0,
+      "z": -55.0,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-08",
+      "name": "Level 3 \u00b7 lift station",
+      "x": 0.0,
+      "y": -400.0,
+      "z": 0.0,
+      "zone_id": "MAIN_SHAFT",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-09",
+      "name": "Level 3 \u00b7 intersection",
+      "x": -130.0,
+      "y": -400.0,
+      "z": 40.0,
+      "zone_id": "L3_WLOOP",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-10",
+      "name": "Level 3 \u00b7 intersection",
+      "x": -150.0,
+      "y": -400.0,
+      "z": 0.0,
+      "zone_id": "L3_WLOOP",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-11",
+      "name": "Level 3 \u00b7 intersection",
+      "x": -130.0,
+      "y": -400.0,
+      "z": -40.0,
+      "zone_id": "L3_WLOOP",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-12",
+      "name": "Level 3 \u00b7 work zone",
+      "x": 120.0,
+      "y": -400.0,
+      "z": -30.0,
+      "zone_id": "L3_MINE",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-13",
+      "name": "Level 3 \u00b7 intersection",
+      "x": 0.0,
+      "y": -400.0,
+      "z": 80.0,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-14",
+      "name": "Level 3 \u00b7 intersection",
+      "x": 60.0,
+      "y": -400.0,
+      "z": 70.0,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-15",
+      "name": "Level 3 \u00b7 intersection",
+      "x": -70.0,
+      "y": -400.0,
+      "z": 65.0,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-16",
+      "name": "Level 3 \u00b7 intersection",
+      "x": 0.0,
+      "y": -400.0,
+      "z": -80.0,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L3-17",
+      "name": "Level 3 \u00b7 intersection",
+      "x": -100.0,
+      "y": -400.0,
+      "z": 0.0,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-L4-01",
+      "name": "Level 4 \u00b7 intersection",
+      "x": 80.0,
+      "y": -550.0,
+      "z": 0.0,
+      "zone_id": "L4_ARM",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-L4-02",
+      "name": "Level 4 \u00b7 intersection",
+      "x": 130.0,
+      "y": -550.0,
+      "z": 10.0,
+      "zone_id": "L4_ARM",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-L4-03",
+      "name": "Level 4 \u00b7 work zone",
+      "x": 170.0,
+      "y": -550.0,
+      "z": -15.0,
+      "zone_id": "L4_ARM",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-L4-04",
+      "name": "Level 4 \u00b7 escape station",
+      "x": -70.0,
+      "y": -550.0,
+      "z": -55.0,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-L4-05",
+      "name": "Level 4 \u00b7 lift station",
+      "x": 0.0,
+      "y": -550.0,
+      "z": 0.0,
+      "zone_id": "MAIN_SHAFT",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-L4-06",
+      "name": "Level 4 \u00b7 intersection",
+      "x": 0.0,
+      "y": -550.0,
+      "z": 100.0,
+      "zone_id": "L4_STEM",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-L4-07",
+      "name": "Level 4 \u00b7 work zone",
+      "x": 0.0,
+      "y": -550.0,
+      "z": 150.0,
+      "zone_id": "L4_STEM",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-L4-08",
+      "name": "Level 4 \u00b7 refuge",
+      "x": -40.0,
+      "y": -550.0,
+      "z": 20.0,
+      "zone_id": "L4_REFUGE",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-L4-09",
+      "name": "Level 4 \u00b7 vent station",
+      "x": 55.0,
+      "y": -550.0,
+      "z": 45.0,
+      "zone_id": "VENT_SHAFT",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-L4-10",
+      "name": "Level 4 \u00b7 intersection",
+      "x": -130.0,
+      "y": -550.0,
+      "z": 0.0,
+      "zone_id": "L4_ARM",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-SURFACE-01",
+      "name": "Surface \u00b7 surface",
+      "x": -70.0,
+      "y": 0.0,
+      "z": -55.0,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": "SURFACE",
+      "depth_m": 0.0
+    },
+    {
+      "gateway_id": "GW-SURFACE-02",
+      "name": "Surface \u00b7 surface",
+      "x": 55.0,
+      "y": 0.0,
+      "z": 45.0,
+      "zone_id": "VENT_SHAFT",
+      "level_id": "SURFACE",
+      "depth_m": 0.0
+    },
+    {
+      "gateway_id": "GW-MESH-061",
+      "name": "Tunnel mesh \u00b7 MAIN_SHAFT",
+      "x": 0.0,
+      "y": -50.0,
+      "z": 0.0,
+      "zone_id": "MAIN_SHAFT",
+      "level_id": "SURFACE",
+      "depth_m": -50.0
+    },
+    {
+      "gateway_id": "GW-MESH-062",
+      "name": "Tunnel mesh \u00b7 VENT_SHAFT",
+      "x": 55.0,
+      "y": -50.0,
+      "z": 45.0,
+      "zone_id": "VENT_SHAFT",
+      "level_id": "SURFACE",
+      "depth_m": -50.0
+    },
+    {
+      "gateway_id": "GW-MESH-063",
+      "name": "Tunnel mesh \u00b7 ESCAPE_SHAFT",
+      "x": -70.0,
+      "y": -50.0,
+      "z": -55.0,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": "SURFACE",
+      "depth_m": -50.0
+    },
+    {
+      "gateway_id": "GW-MESH-064",
+      "name": "Tunnel mesh \u00b7 MAIN_SHAFT",
+      "x": 0.0,
+      "y": -175.0,
+      "z": 0.0,
+      "zone_id": "MAIN_SHAFT",
+      "level_id": "L1",
+      "depth_m": -175.0
+    },
+    {
+      "gateway_id": "GW-MESH-065",
+      "name": "Tunnel mesh \u00b7 VENT_SHAFT",
+      "x": 55.0,
+      "y": -175.0,
+      "z": 45.0,
+      "zone_id": "VENT_SHAFT",
+      "level_id": "L1",
+      "depth_m": -175.0
+    },
+    {
+      "gateway_id": "GW-MESH-066",
+      "name": "Tunnel mesh \u00b7 ESCAPE_SHAFT",
+      "x": -70.0,
+      "y": -175.0,
+      "z": -55.0,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": "L1",
+      "depth_m": -175.0
+    },
+    {
+      "gateway_id": "GW-MESH-067",
+      "name": "Tunnel mesh \u00b7 MAIN_SHAFT",
+      "x": 0.0,
+      "y": -325.0,
+      "z": 0.0,
+      "zone_id": "MAIN_SHAFT",
+      "level_id": "L2",
+      "depth_m": -325.0
+    },
+    {
+      "gateway_id": "GW-MESH-068",
+      "name": "Tunnel mesh \u00b7 VENT_SHAFT",
+      "x": 55.0,
+      "y": -325.0,
+      "z": 45.0,
+      "zone_id": "VENT_SHAFT",
+      "level_id": "L2",
+      "depth_m": -325.0
+    },
+    {
+      "gateway_id": "GW-MESH-069",
+      "name": "Tunnel mesh \u00b7 ESCAPE_SHAFT",
+      "x": -70.0,
+      "y": -325.0,
+      "z": -55.0,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": "L2",
+      "depth_m": -325.0
+    },
+    {
+      "gateway_id": "GW-MESH-070",
+      "name": "Tunnel mesh \u00b7 MAIN_SHAFT",
+      "x": 0.0,
+      "y": -475.0,
+      "z": 0.0,
+      "zone_id": "MAIN_SHAFT",
+      "level_id": "L3",
+      "depth_m": -475.0
+    },
+    {
+      "gateway_id": "GW-MESH-071",
+      "name": "Tunnel mesh \u00b7 VENT_SHAFT",
+      "x": 55.0,
+      "y": -475.0,
+      "z": 45.0,
+      "zone_id": "VENT_SHAFT",
+      "level_id": "L3",
+      "depth_m": -475.0
+    },
+    {
+      "gateway_id": "GW-MESH-072",
+      "name": "Tunnel mesh \u00b7 ESCAPE_SHAFT",
+      "x": -70.0,
+      "y": -475.0,
+      "z": -55.0,
+      "zone_id": "ESCAPE_SHAFT",
+      "level_id": "L3",
+      "depth_m": -475.0
+    },
+    {
+      "gateway_id": "GW-MESH-073",
+      "name": "Tunnel mesh \u00b7 L1_LOOP",
+      "x": 37.5,
+      "y": -100.0,
+      "z": 57.5,
+      "zone_id": "L1_LOOP",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-MESH-074",
+      "name": "Tunnel mesh \u00b7 L1_WEST",
+      "x": -80.0,
+      "y": -100.0,
+      "z": -22.5,
+      "zone_id": "L1_WEST",
+      "level_id": "L1",
+      "depth_m": -100.0
+    },
+    {
+      "gateway_id": "GW-MESH-075",
+      "name": "Tunnel mesh \u00b7 L2_BRANCH",
+      "x": 100.0,
+      "y": -250.0,
+      "z": -22.5,
+      "zone_id": "L2_BRANCH",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-MESH-076",
+      "name": "Tunnel mesh \u00b7 L2_WORK",
+      "x": -65.0,
+      "y": -250.0,
+      "z": 32.5,
+      "zone_id": "L2_WORK",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-MESH-077",
+      "name": "Tunnel mesh \u00b7 L2_LINK",
+      "x": -90.0,
+      "y": -250.0,
+      "z": -27.5,
+      "zone_id": "L2_LINK",
+      "level_id": "L2",
+      "depth_m": -250.0
+    },
+    {
+      "gateway_id": "GW-MESH-078",
+      "name": "Tunnel mesh \u00b7 L3_RING",
+      "x": 75.0,
+      "y": -400.0,
+      "z": 35.0,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-MESH-079",
+      "name": "Tunnel mesh \u00b7 L3_RING",
+      "x": 72.5,
+      "y": -400.0,
+      "z": -35.0,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-MESH-080",
+      "name": "Tunnel mesh \u00b7 L3_RING",
+      "x": -85.0,
+      "y": -400.0,
+      "z": 32.5,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-MESH-081",
+      "name": "Tunnel mesh \u00b7 L3_RING",
+      "x": -35.0,
+      "y": -400.0,
+      "z": 72.5,
+      "zone_id": "L3_RING",
+      "level_id": "L3",
+      "depth_m": -400.0
+    },
+    {
+      "gateway_id": "GW-MESH-082",
+      "name": "Tunnel mesh \u00b7 L4_STEM",
+      "x": 0.0,
+      "y": -550.0,
+      "z": 50.0,
+      "zone_id": "L4_STEM",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-MESH-083",
+      "name": "Tunnel mesh \u00b7 L4_ARM",
+      "x": 40.0,
+      "y": -550.0,
+      "z": 0.0,
+      "zone_id": "L4_ARM",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-MESH-084",
+      "name": "Tunnel mesh \u00b7 L4_LINK",
+      "x": -100.0,
+      "y": -550.0,
+      "z": -27.5,
+      "zone_id": "L4_LINK",
+      "level_id": "L4",
+      "depth_m": -550.0
+    },
+    {
+      "gateway_id": "GW-MESH-085",
+      "name": "Tunnel mesh \u00b7 DECLINE_RAMP",
+      "x": 90.0,
+      "y": -325.0,
+      "z": -40.0,
+      "zone_id": "DECLINE_RAMP",
+      "level_id": "L2",
+      "depth_m": -325.0
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "spo2": {"warning_below": 94, "critical_below": 90},
+  "heart_rate": {"warning_above": 110, "critical_above": 130},
+  "ambient_o2_pct": {"warning_below": 19.5, "critical_below": 18.0},
+  "methane_lel_pct": {"warning_above": 10.0, "critical_above": 20.0},
+  "battery_pct": {"warning_below": 20, "critical_below": 8},
+  "comm_loss_timeout_s": 60,
+  "burst_mode": {
+    "normal_interval_s": 5,
+    "burst_interval_s": 1.5
+  }
+}

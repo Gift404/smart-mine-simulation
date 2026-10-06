@@ -1,0 +1,139 @@
+{
+  "workers": [
+    {
+      "worker_id": "W01",
+      "name": "Thabo",
+      "role": "Blaster",
+      "wearable_id": "WD-W01",
+      "start_edge": "L1_loop_0",
+      "walking_speed_mps": 1.2,
+      "behavior_profile": "steady"
+    },
+    {
+      "worker_id": "W02",
+      "name": "Sipho",
+      "role": "Mechanic",
+      "wearable_id": "WD-W02",
+      "start_edge": "L1_east_0",
+      "walking_speed_mps": 1.1,
+      "behavior_profile": "patrol"
+    },
+    {
+      "worker_id": "W03",
+      "name": "Lerato",
+      "role": "Loader Operator",
+      "wearable_id": "WD-W03",
+      "start_edge": "MAIN_SURFACE_MAIN_to_L1",
+      "walking_speed_mps": 0.85,
+      "behavior_profile": "shaft_rider"
+    },
+    {
+      "worker_id": "W04",
+      "name": "Naledi",
+      "role": "Mechanic",
+      "wearable_id": "WD-W04",
+      "start_edge": "L2_spine_0",
+      "walking_speed_mps": 1.15,
+      "behavior_profile": "steady"
+    },
+    {
+      "worker_id": "W05",
+      "name": "Johan",
+      "role": "Loader Operator",
+      "wearable_id": "WD-W05",
+      "start_edge": "L2_south_0",
+      "walking_speed_mps": 1.05,
+      "behavior_profile": "steady"
+    },
+    {
+      "worker_id": "W06",
+      "name": "Pieter",
+      "role": "Driller",
+      "wearable_id": "WD-W06",
+      "start_edge": "MAIN_L1_LIFT_to_L2",
+      "walking_speed_mps": 0.9,
+      "behavior_profile": "shaft_rider"
+    },
+    {
+      "worker_id": "W07",
+      "name": "Ayanda",
+      "role": "Supervisor",
+      "wearable_id": "WD-W07",
+      "start_edge": "L3_ring_0",
+      "walking_speed_mps": 0.95,
+      "behavior_profile": "steady"
+    },
+    {
+      "worker_id": "W08",
+      "name": "Kagiso",
+      "role": "Blaster",
+      "wearable_id": "WD-W08",
+      "start_edge": "L3_wloop_0",
+      "walking_speed_mps": 1.1,
+      "behavior_profile": "patrol"
+    },
+    {
+      "worker_id": "W09",
+      "name": "Tumi",
+      "role": "Surveyor",
+      "wearable_id": "WD-W09",
+      "start_edge": "MAIN_L2_LIFT_to_L3",
+      "walking_speed_mps": 0.88,
+      "behavior_profile": "shaft_rider"
+    },
+    {
+      "worker_id": "W10",
+      "name": "Bongani",
+      "role": "Geologist",
+      "wearable_id": "WD-W10",
+      "start_edge": "L4_arm_0",
+      "walking_speed_mps": 1.0,
+      "behavior_profile": "steady"
+    },
+    {
+      "worker_id": "W11",
+      "name": "Refilwe",
+      "role": "Blaster",
+      "wearable_id": "WD-W11",
+      "start_edge": "L4_stem_0",
+      "walking_speed_mps": 1.05,
+      "behavior_profile": "patrol"
+    },
+    {
+      "worker_id": "W12",
+      "name": "Mpho",
+      "role": "Mechanic",
+      "wearable_id": "WD-W12",
+      "start_edge": "VENT_L1_VENT_to_L2",
+      "walking_speed_mps": 0.8,
+      "behavior_profile": "shaft_rider"
+    },
+    {
+      "worker_id": "W13",
+      "name": "Katlego",
+      "role": "Supervisor",
+      "wearable_id": "WD-W13",
+      "start_edge": "L1_west_0",
+      "walking_speed_mps": 1.1,
+      "behavior_profile": "steady"
+    },
+    {
+      "worker_id": "W14",
+      "name": "Dineo",
+      "role": "Loader Operator",
+      "wearable_id": "WD-W14",
+      "start_edge": "RAMP_L2_L3",
+      "walking_speed_mps": 0.75,
+      "behavior_profile": "shaft_rider"
+    },
+    {
+      "worker_id": "W15",
+      "name": "Vusi",
+      "role": "Electrician",
+      "wearable_id": "WD-W15",
+      "start_edge": "ESC_L2_ESCAPE_to_L3",
+      "walking_speed_mps": 0.95,
+      "behavior_profile": "patrol"
+    }
+  ]
+}
