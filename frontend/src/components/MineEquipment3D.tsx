@@ -29,9 +29,11 @@ function DriverFigure({ tint = "#fbbf24" }: { tint?: string }) {
 export function HaulVehicleMesh({
   vehicle,
   opacity,
+  showLabel = true,
 }: {
   vehicle: Vehicle;
   opacity: number;
+  showLabel?: boolean;
 }) {
   if (opacity < 0.12) return null;
   const yaw = headingToYaw(vehicle.heading_deg ?? 0);
@@ -71,25 +73,27 @@ export function HaulVehicleMesh({
         />
       </mesh>
       {vehicle.driver_worker_id && <DriverFigure tint={isLhd ? "#f59e0b" : "#38bdf8"} />}
-      <Html distanceFactor={140} style={{ pointerEvents: "none" }}>
-        <div
-          style={{
-            color: "#fde68a",
-            fontSize: 10,
-            fontWeight: 700,
-            textShadow: "0 0 4px #000",
-            transform: "translate(12px, -18px)",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {vehicle.vehicle_id}
-          {vehicle.driver_name ? ` · ${vehicle.driver_name}` : ""}
-          <div style={{ color: "#94a3b8", fontWeight: 600, fontSize: 9 }}>
-            {vehicle.activity ?? vehicle.phase}
-            {(vehicle.cargo_fill ?? 0) > 0.05 ? ` · ${Math.round((vehicle.cargo_fill ?? 0) * 100)}%` : ""}
+      {showLabel && (
+        <Html distanceFactor={140} style={{ pointerEvents: "none" }}>
+          <div
+            style={{
+              color: "#fde68a",
+              fontSize: 10,
+              fontWeight: 700,
+              textShadow: "0 0 4px #000",
+              transform: "translate(12px, -18px)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {vehicle.vehicle_id}
+            {vehicle.driver_name ? ` · ${vehicle.driver_name}` : ""}
+            <div style={{ color: "#94a3b8", fontWeight: 600, fontSize: 9 }}>
+              {vehicle.activity ?? vehicle.phase}
+              {(vehicle.cargo_fill ?? 0) > 0.05 ? ` · ${Math.round((vehicle.cargo_fill ?? 0) * 100)}%` : ""}
+            </div>
           </div>
-        </div>
-      </Html>
+        </Html>
+      )}
     </group>
   );
 }
@@ -102,14 +106,66 @@ export function MiningFaceProps({
   node: MineNode;
   opacity: number;
 }) {
-  if (opacity < 0.12 || node.type !== "work_zone") return null;
+  if (opacity < 0.12) return null;
+  if (node.type === "tip") {
+    return (
+      <group position={[node.x, node.y, node.z ?? 0]}>
+        <mesh position={[0, 2, 0]}>
+          <boxGeometry args={[8, 4, 8]} />
+          <meshStandardMaterial color="#d97706" metalness={0.3} roughness={0.5} />
+        </mesh>
+        <mesh position={[0, 5, 0]} rotation={[0.4, 0, 0]}>
+          <boxGeometry args={[6, 1.2, 10]} />
+          <meshStandardMaterial color="#78350f" />
+        </mesh>
+      </group>
+    );
+  }
+  if (node.type === "crusher") {
+    return (
+      <group position={[node.x, node.y, node.z ?? 0]}>
+        <mesh position={[0, 3, 0]}>
+          <boxGeometry args={[12, 6, 10]} />
+          <meshStandardMaterial color="#57534e" metalness={0.45} roughness={0.4} />
+        </mesh>
+        <mesh position={[0, 7, 0]}>
+          <cylinderGeometry args={[3, 4, 4, 8]} />
+          <meshStandardMaterial color="#78716c" metalness={0.5} roughness={0.35} />
+        </mesh>
+      </group>
+    );
+  }
+  if (node.type === "conveyor") {
+    return (
+      <group position={[node.x, node.y, node.z ?? 0]} rotation={[0, 0.4, 0]}>
+        <mesh position={[0, 1.5, 0]}>
+          <boxGeometry args={[4, 1, 28]} />
+          <meshStandardMaterial color="#44403c" />
+        </mesh>
+        <mesh position={[0, 2.2, 0]}>
+          <boxGeometry args={[3.2, 0.4, 26]} />
+          <meshStandardMaterial color="#a8a29e" />
+        </mesh>
+      </group>
+    );
+  }
+  if (node.type === "ore_pass") {
+    return (
+      <group position={[node.x, node.y, node.z ?? 0]}>
+        <mesh position={[0, 1, 0]}>
+          <cylinderGeometry args={[3.5, 3.5, 6, 12, 1, true]} />
+          <meshStandardMaterial color="#92400e" side={2} transparent opacity={0.7} />
+        </mesh>
+      </group>
+    );
+  }
+  if (node.type !== "work_zone") return null;
   const seed = node.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
   const ox = ((seed % 7) - 3) * 2.5;
   const oz = (((seed >> 3) % 7) - 3) * 2.5;
 
   return (
     <group position={[node.x + ox, node.y, (node.z ?? 0) + oz]}>
-      {/* Ore pile */}
       <mesh position={[6, 1.2, -4]} scale={[1, 0.7, 1]}>
         <sphereGeometry args={[4.5, 10, 8]} />
         <meshStandardMaterial color="#78350f" roughness={0.95} />
@@ -118,7 +174,6 @@ export function MiningFaceProps({
         <sphereGeometry args={[3.2, 8, 6]} />
         <meshStandardMaterial color="#92400e" roughness={0.9} />
       </mesh>
-      {/* Drill jumbo boom */}
       <group position={[-8, 0, 5]} rotation={[0, 0.6, 0]}>
         <mesh position={[0, 1.2, 0]}>
           <boxGeometry args={[2.8, 1.4, 5]} />
@@ -128,18 +183,7 @@ export function MiningFaceProps({
           <boxGeometry args={[0.45, 0.45, 7]} />
           <meshStandardMaterial color="#94a3b8" metalness={0.5} roughness={0.35} />
         </mesh>
-        <mesh position={[0, 3.8, -7]}>
-          <cylinderGeometry args={[0.35, 0.25, 1.2, 8]} />
-          <meshStandardMaterial color="#cbd5e1" />
-        </mesh>
       </group>
-      {/* Support props / timber stand-ins */}
-      {([-10, 10] as const).map((x) => (
-        <mesh key={x} position={[x, 4, 0]}>
-          <cylinderGeometry args={[0.35, 0.35, 8, 6]} />
-          <meshStandardMaterial color="#57534e" />
-        </mesh>
-      ))}
     </group>
   );
 }

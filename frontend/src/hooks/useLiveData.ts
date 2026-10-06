@@ -3,7 +3,7 @@ import { api } from "../services/api";
 import { connectLiveSocket } from "../services/websocket";
 import type {
   Worker, Gateway, Alert, Job, SimulationStatus, Telemetry, PositionEstimate, WsMessage, MineGraph,
-  SignalSample, MineSensor, Vehicle,
+  SignalSample, MineSensor, Vehicle, Geofence,
 } from "../types";
 
 export interface LiveState {
@@ -14,6 +14,7 @@ export interface LiveState {
   sensors: Record<string, MineSensor>;
   alerts: Record<string, Alert>;
   jobs: Record<string, Job>;
+  geofences: Geofence[];
   status: SimulationStatus | null;
   telemetryByTag: Record<string, Telemetry>;
   telemetryHistoryByTag: Record<string, Telemetry[]>;
@@ -27,6 +28,7 @@ const MAX_HISTORY_POINTS = 600; // ~ plenty for a 30 min window at burst-mode ca
 export function useLiveData() {
   const [state, setState] = useState<LiveState>({
     mine: null, workers: {}, vehicles: {}, gateways: {}, sensors: {}, alerts: {}, jobs: {},
+    geofences: [],
     status: null, telemetryByTag: {}, telemetryHistoryByTag: {}, positionByTag: {},
     signalByTag: {}, signalHistoryByTag: {},
   });
@@ -35,8 +37,9 @@ export function useLiveData() {
   // bootstrap from REST, then poll status/alerts/jobs periodically as a safety net
   useEffect(() => {
     async function bootstrap() {
-      const [mine, workers, vehicles, gateways, sensors, alerts, jobs, status] = await Promise.all([
-        api.mine(), api.workers(), api.vehicles(), api.gateways(), api.sensors(), api.alerts(), api.jobs(), api.status(),
+      const [mine, workers, vehicles, gateways, sensors, alerts, jobs, geofences, status] = await Promise.all([
+        api.mine(), api.workers(), api.vehicles(), api.gateways(), api.sensors(), api.alerts(), api.jobs(),
+        api.geofences().catch(() => [] as Geofence[]), api.status(),
       ]);
       setState((s) => ({
         ...s,
@@ -47,6 +50,7 @@ export function useLiveData() {
         sensors: Object.fromEntries(sensors.map((x) => [x.sensor_id, x])),
         alerts: Object.fromEntries(alerts.map((a) => [a.alert_id, a])),
         jobs: Object.fromEntries(jobs.map((j) => [j.job_id, j])),
+        geofences,
         status,
       }));
     }
@@ -125,6 +129,11 @@ export function useLiveData() {
             activity_detail: (p as { activity_detail?: string | null }).activity_detail ?? worker.activity_detail,
             assigned_vehicle_id:
               (p as { assigned_vehicle_id?: string | null }).assigned_vehicle_id ?? worker.assigned_vehicle_id,
+            watch_vibrating:
+              (p as { watch_vibrating?: boolean }).watch_vibrating ?? worker.watch_vibrating,
+            geofence_id: (p as { geofence_id?: string | null }).geofence_id ?? worker.geofence_id,
+            geofence_name: (p as { geofence_name?: string | null }).geofence_name ?? worker.geofence_name,
+            mode: ((p as { mode?: Worker["mode"] }).mode ?? worker.mode) as Worker["mode"],
           };
           if (jump > 40) {
             return { ...s, positionByTag: { ...s.positionByTag, [p.tag_id]: p } };
@@ -169,7 +178,37 @@ export function useLiveData() {
           sensors: { ...s.sensors, [sensor.sensor_id]: sensor },
         }));
       } else if (topic.includes("/command")) {
-        // mode changes are also reflected in the next /workers poll; nothing to do live
+        const cmd = payload as {
+          command?: string;
+          fence_id?: string;
+          fence_name?: string;
+          message?: string;
+        };
+        const parts = topic.split("/");
+        const tagIdx = parts.indexOf("wearable");
+        const tagId = tagIdx >= 0 ? parts[tagIdx + 1] : null;
+        if (!tagId || !cmd.command) return;
+        setState((s) => {
+          const worker = Object.values(s.workers).find((w) => w.wearable_id === tagId);
+          if (!worker) return s;
+          let next = { ...worker };
+          if (cmd.command === "VIBRATE_ON") {
+            next = {
+              ...next,
+              watch_vibrating: true,
+              geofence_id: cmd.fence_id ?? next.geofence_id,
+              geofence_name: cmd.fence_name ?? next.geofence_name,
+              mode: "burst",
+            };
+          } else if (cmd.command === "VIBRATE_OFF") {
+            next = { ...next, watch_vibrating: false, geofence_id: null, geofence_name: null };
+          } else if (cmd.command === "BURST_ON") {
+            next = { ...next, mode: "burst" };
+          } else if (cmd.command === "BURST_OFF") {
+            next = { ...next, mode: "normal" };
+          }
+          return { ...s, workers: { ...s.workers, [worker.worker_id]: next } };
+        });
       }
     });
     return disconnect;

@@ -1,858 +1,378 @@
 {
-  "coverage_radius_m": 95,
-  "path_loss_exponent": 2.8,
+  "coverage_radius_m": 110,
+  "path_loss_exponent": 2.9,
   "reference_rssi_at_1m": -40,
   "noise_std_db": 4.0,
   "gateways": [
     {
+      "gateway_id": "GW-01",
+      "name": "Platreef \u00b7 L750 \u00b7 Shaft 1 station",
+      "x": 3.0,
+      "y": -750.0,
+      "z": -2.0,
+      "zone_id": "L750_HAULAGE",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-02",
+      "name": "Platreef \u00b7 L750 \u00b7 Shaft 3 tip station",
+      "x": 173.0,
+      "y": -750.0,
+      "z": 43.0,
+      "zone_id": "L750_HAULAGE",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-03",
+      "name": "Platreef \u00b7 L750 \u00b7 Central workshop",
+      "x": -57.0,
+      "y": -750.0,
+      "z": 93.0,
+      "zone_id": "L750_HAULAGE",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-04",
+      "name": "Platreef \u00b7 L750 \u00b7 East haulage",
+      "x": 313.0,
+      "y": -750.0,
+      "z": 23.0,
+      "zone_id": "L750_HAULAGE",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-05",
+      "name": "Platreef \u00b7 L750 \u00b7 North haulage",
+      "x": 28.0,
+      "y": -750.0,
+      "z": 218.0,
+      "zone_id": "L750_HAULAGE",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-06",
+      "name": "Platreef \u00b7 L750 \u00b7 Ore-pass collar",
+      "x": 383.0,
+      "y": -750.0,
+      "z": 68.0,
+      "zone_id": "L750_HAULAGE",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-07",
+      "name": "Platreef \u00b7 L750 \u00b7 Stope N1",
+      "x": 433.0,
+      "y": -750.0,
+      "z": 188.0,
+      "zone_id": "L750_HAULAGE",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-08",
+      "name": "Platreef \u00b7 L750 \u00b7 Stope N2",
+      "x": 523.0,
+      "y": -750.0,
+      "z": 93.0,
+      "zone_id": "L750_HAULAGE",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-09",
+      "name": "Platreef \u00b7 L750 \u00b7 Stope N3",
+      "x": 483.0,
+      "y": -750.0,
+      "z": 288.0,
+      "zone_id": "L750_HAULAGE",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-10",
+      "name": "Platreef \u00b7 L850 \u00b7 Shaft 1 station",
+      "x": 3.0,
+      "y": -850.0,
+      "z": -2.0,
+      "zone_id": "L850_HAULAGE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-11",
+      "name": "Platreef \u00b7 L850 \u00b7 Shaft 3 tip station",
+      "x": 173.0,
+      "y": -850.0,
+      "z": 43.0,
+      "zone_id": "L850_HAULAGE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-12",
+      "name": "Platreef \u00b7 L850 \u00b7 Central workshop",
+      "x": -57.0,
+      "y": -850.0,
+      "z": 93.0,
+      "zone_id": "L850_HAULAGE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-13",
+      "name": "Platreef \u00b7 L850 \u00b7 East haulage",
+      "x": 313.0,
+      "y": -850.0,
+      "z": 23.0,
+      "zone_id": "L850_HAULAGE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-14",
+      "name": "Platreef \u00b7 L850 \u00b7 North haulage",
+      "x": 28.0,
+      "y": -850.0,
+      "z": 218.0,
+      "zone_id": "L850_HAULAGE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-15",
+      "name": "Platreef \u00b7 L850 \u00b7 Ore-pass collar",
+      "x": 383.0,
+      "y": -850.0,
+      "z": 68.0,
+      "zone_id": "L850_HAULAGE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-16",
+      "name": "Platreef \u00b7 L850 \u00b7 Stope E1",
+      "x": 483.0,
+      "y": -850.0,
+      "z": 48.0,
+      "zone_id": "L850_HAULAGE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-17",
+      "name": "Platreef \u00b7 L850 \u00b7 Stope E2",
+      "x": 583.0,
+      "y": -850.0,
+      "z": -27.0,
+      "zone_id": "L850_HAULAGE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-18",
+      "name": "Platreef \u00b7 L850 \u00b7 Stope E3",
+      "x": 533.0,
+      "y": -850.0,
+      "z": 143.0,
+      "zone_id": "L850_HAULAGE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-19",
+      "name": "Platreef \u00b7 L950 \u00b7 Shaft 1 station",
+      "x": 3.0,
+      "y": -950.0,
+      "z": -2.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-20",
+      "name": "Platreef \u00b7 L950 \u00b7 Shaft 3 tip station",
+      "x": 173.0,
+      "y": -950.0,
+      "z": 43.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-21",
+      "name": "Platreef \u00b7 L950 \u00b7 Central workshop",
+      "x": -57.0,
+      "y": -950.0,
+      "z": 93.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-22",
+      "name": "Platreef \u00b7 L950 \u00b7 East haulage",
+      "x": 313.0,
+      "y": -950.0,
+      "z": 23.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-23",
+      "name": "Platreef \u00b7 L950 \u00b7 North haulage",
+      "x": 28.0,
+      "y": -950.0,
+      "z": 218.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-24",
+      "name": "Platreef \u00b7 L950 \u00b7 Ore-pass collar",
+      "x": 383.0,
+      "y": -950.0,
+      "z": 68.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-25",
+      "name": "Platreef \u00b7 L950 \u00b7 Stope P1",
+      "x": 463.0,
+      "y": -950.0,
+      "z": 118.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-26",
+      "name": "Platreef \u00b7 L950 \u00b7 Stope P2",
+      "x": 553.0,
+      "y": -950.0,
+      "z": 213.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-27",
+      "name": "Platreef \u00b7 L950 \u00b7 Stope P3",
+      "x": 503.0,
+      "y": -950.0,
+      "z": 23.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-28",
+      "name": "Platreef \u00b7 L1050 \u00b7 Shaft 1 station",
+      "x": 3.0,
+      "y": -1050.0,
+      "z": -2.0,
+      "zone_id": "L1050_HAULAGE",
+      "level_id": "L1050",
+      "depth_m": -1050.0
+    },
+    {
+      "gateway_id": "GW-29",
+      "name": "Platreef \u00b7 L1050 \u00b7 Shaft 3 tip station",
+      "x": 173.0,
+      "y": -1050.0,
+      "z": 43.0,
+      "zone_id": "L1050_HAULAGE",
+      "level_id": "L1050",
+      "depth_m": -1050.0
+    },
+    {
+      "gateway_id": "GW-30",
+      "name": "Platreef \u00b7 L1050 \u00b7 Central workshop",
+      "x": -57.0,
+      "y": -1050.0,
+      "z": 93.0,
+      "zone_id": "L1050_HAULAGE",
+      "level_id": "L1050",
+      "depth_m": -1050.0
+    },
+    {
+      "gateway_id": "GW-31",
+      "name": "Platreef \u00b7 L1050 \u00b7 East haulage",
+      "x": 313.0,
+      "y": -1050.0,
+      "z": 23.0,
+      "zone_id": "L1050_HAULAGE",
+      "level_id": "L1050",
+      "depth_m": -1050.0
+    },
+    {
+      "gateway_id": "GW-32",
+      "name": "Platreef \u00b7 L1050 \u00b7 North haulage",
+      "x": 28.0,
+      "y": -1050.0,
+      "z": 218.0,
+      "zone_id": "L1050_HAULAGE",
+      "level_id": "L1050",
+      "depth_m": -1050.0
+    },
+    {
+      "gateway_id": "GW-33",
+      "name": "Platreef \u00b7 L1050 \u00b7 Ore-pass collar",
+      "x": 383.0,
+      "y": -1050.0,
+      "z": 68.0,
+      "zone_id": "L1050_HAULAGE",
+      "level_id": "L1050",
+      "depth_m": -1050.0
+    },
+    {
+      "gateway_id": "GW-34",
+      "name": "Platreef \u00b7 L1050 \u00b7 Stope E1",
+      "x": 483.0,
+      "y": -1050.0,
+      "z": 48.0,
+      "zone_id": "L1050_HAULAGE",
+      "level_id": "L1050",
+      "depth_m": -1050.0
+    },
+    {
+      "gateway_id": "GW-35",
+      "name": "Platreef \u00b7 L1050 \u00b7 Stope E2",
+      "x": 583.0,
+      "y": -1050.0,
+      "z": -27.0,
+      "zone_id": "L1050_HAULAGE",
+      "level_id": "L1050",
+      "depth_m": -1050.0
+    },
+    {
+      "gateway_id": "GW-36",
+      "name": "Platreef \u00b7 L1050 \u00b7 Stope E3",
+      "x": 533.0,
+      "y": -1050.0,
+      "z": 143.0,
+      "zone_id": "L1050_HAULAGE",
+      "level_id": "L1050",
+      "depth_m": -1050.0
+    },
+    {
       "gateway_id": "GW-SURF",
-      "name": "Surface collar LoRa",
-      "x": 12.0,
+      "name": "Platreef surface \u00b7 Shaft 1 collar",
+      "x": 15.0,
       "y": 0.0,
-      "z": 8.0,
+      "z": 5.0,
       "zone_id": "SURFACE",
       "level_id": "SURFACE",
       "depth_m": 0.0
-    },
-    {
-      "gateway_id": "GW-L1-01",
-      "name": "Level 1 \u00b7 intersection",
-      "x": 95.0,
-      "y": -100.0,
-      "z": 0.0,
-      "zone_id": "L1_EAST",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-02",
-      "name": "Level 1 \u00b7 escape station",
-      "x": -70.0,
-      "y": -100.0,
-      "z": -55.0,
-      "zone_id": "ESCAPE_SHAFT",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-03",
-      "name": "Level 1 \u00b7 lift station",
-      "x": 0.0,
-      "y": -100.0,
-      "z": 0.0,
-      "zone_id": "MAIN_SHAFT",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-04",
-      "name": "Level 1 \u00b7 intersection",
-      "x": 40.0,
-      "y": -100.0,
-      "z": 25.0,
-      "zone_id": "L1_LOOP",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-05",
-      "name": "Level 1 \u00b7 work zone",
-      "x": 130.0,
-      "y": -100.0,
-      "z": 20.0,
-      "zone_id": "L1_EAST",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-06",
-      "name": "Level 1 \u00b7 work zone",
-      "x": -130.0,
-      "y": -100.0,
-      "z": 40.0,
-      "zone_id": "L1_WEST",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-07",
-      "name": "Level 1 \u00b7 intersection",
-      "x": 0.0,
-      "y": -100.0,
-      "z": 90.0,
-      "zone_id": "L1_LOOP",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-08",
-      "name": "Level 1 \u00b7 intersection",
-      "x": 80.0,
-      "y": -100.0,
-      "z": 55.0,
-      "zone_id": "L1_EAST",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-09",
-      "name": "Level 1 \u00b7 intersection",
-      "x": -55.0,
-      "y": -100.0,
-      "z": 70.0,
-      "zone_id": "L1_LOOP",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-10",
-      "name": "Level 1 \u00b7 refuge",
-      "x": -25.0,
-      "y": -100.0,
-      "z": 35.0,
-      "zone_id": "L1_LOOP",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-11",
-      "name": "Level 1 \u00b7 intersection",
-      "x": 0.0,
-      "y": -100.0,
-      "z": -85.0,
-      "zone_id": "L1_SOUTH",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-12",
-      "name": "Level 1 \u00b7 intersection",
-      "x": 70.0,
-      "y": -100.0,
-      "z": -60.0,
-      "zone_id": "L1_SOUTH",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-13",
-      "name": "Level 1 \u00b7 intersection",
-      "x": -95.0,
-      "y": -100.0,
-      "z": 10.0,
-      "zone_id": "L1_WEST",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L1-14",
-      "name": "Level 1 \u00b7 work zone",
-      "x": 50.0,
-      "y": -100.0,
-      "z": -90.0,
-      "zone_id": "L1_SOUTH",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-L2-01",
-      "name": "Level 2 \u00b7 intersection",
-      "x": 90.0,
-      "y": -250.0,
-      "z": -60.0,
-      "zone_id": "L2_BRANCH",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-02",
-      "name": "Level 2 \u00b7 intersection",
-      "x": 50.0,
-      "y": -250.0,
-      "z": 10.0,
-      "zone_id": "L2_SPINE",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-03",
-      "name": "Level 2 \u00b7 intersection",
-      "x": 110.0,
-      "y": -250.0,
-      "z": 15.0,
-      "zone_id": "L2_SPINE",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-04",
-      "name": "Level 2 \u00b7 work zone",
-      "x": 160.0,
-      "y": -250.0,
-      "z": 5.0,
-      "zone_id": "L2_SPINE",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-05",
-      "name": "Level 2 \u00b7 emergency",
-      "x": 120.0,
-      "y": -250.0,
-      "z": 60.0,
-      "zone_id": "L2_EMERG",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-06",
-      "name": "Level 2 \u00b7 escape station",
-      "x": -70.0,
-      "y": -250.0,
-      "z": -55.0,
-      "zone_id": "ESCAPE_SHAFT",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-07",
-      "name": "Level 2 \u00b7 lift station",
-      "x": 0.0,
-      "y": -250.0,
-      "z": 0.0,
-      "zone_id": "MAIN_SHAFT",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-08",
-      "name": "Level 2 \u00b7 intersection",
-      "x": 20.0,
-      "y": -250.0,
-      "z": 70.0,
-      "zone_id": "L2_NORTH",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-09",
-      "name": "Level 2 \u00b7 work zone",
-      "x": 25.0,
-      "y": -250.0,
-      "z": 120.0,
-      "zone_id": "L2_NORTH",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-10",
-      "name": "Level 2 \u00b7 intersection",
-      "x": -15.0,
-      "y": -250.0,
-      "z": -70.0,
-      "zone_id": "L2_SOUTH",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-11",
-      "name": "Level 2 \u00b7 work zone",
-      "x": -20.0,
-      "y": -250.0,
-      "z": -125.0,
-      "zone_id": "L2_SOUTH",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-12",
-      "name": "Level 2 \u00b7 vent station",
-      "x": 55.0,
-      "y": -250.0,
-      "z": 45.0,
-      "zone_id": "VENT_SHAFT",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-13",
-      "name": "Level 2 \u00b7 intersection",
-      "x": -50.0,
-      "y": -250.0,
-      "z": -5.0,
-      "zone_id": "L2_SPINE",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-14",
-      "name": "Level 2 \u00b7 intersection",
-      "x": -110.0,
-      "y": -250.0,
-      "z": 0.0,
-      "zone_id": "L2_SPINE",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-15",
-      "name": "Level 2 \u00b7 work zone",
-      "x": -160.0,
-      "y": -250.0,
-      "z": -10.0,
-      "zone_id": "L2_SPINE",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L2-16",
-      "name": "Level 2 \u00b7 workshop",
-      "x": -80.0,
-      "y": -250.0,
-      "z": 70.0,
-      "zone_id": "L2_WORK",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-L3-01",
-      "name": "Level 3 \u00b7 intersection",
-      "x": 40.0,
-      "y": -400.0,
-      "z": 0.0,
-      "zone_id": "L3_EW",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-02",
-      "name": "Level 3 \u00b7 intersection",
-      "x": 0.0,
-      "y": -400.0,
-      "z": 35.0,
-      "zone_id": "L3_NS",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-03",
-      "name": "Level 3 \u00b7 intersection",
-      "x": 0.0,
-      "y": -400.0,
-      "z": -35.0,
-      "zone_id": "L3_NS",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-04",
-      "name": "Level 3 \u00b7 intersection",
-      "x": -40.0,
-      "y": -400.0,
-      "z": 0.0,
-      "zone_id": "L3_EW",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-05",
-      "name": "Level 3 \u00b7 intersection",
-      "x": 90.0,
-      "y": -400.0,
-      "z": 0.0,
-      "zone_id": "L3_RING",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-06",
-      "name": "Level 3 \u00b7 emergency",
-      "x": 40.0,
-      "y": -400.0,
-      "z": -50.0,
-      "zone_id": "L3_EMERG",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-07",
-      "name": "Level 3 \u00b7 escape station",
-      "x": -70.0,
-      "y": -400.0,
-      "z": -55.0,
-      "zone_id": "ESCAPE_SHAFT",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-08",
-      "name": "Level 3 \u00b7 lift station",
-      "x": 0.0,
-      "y": -400.0,
-      "z": 0.0,
-      "zone_id": "MAIN_SHAFT",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-09",
-      "name": "Level 3 \u00b7 intersection",
-      "x": -130.0,
-      "y": -400.0,
-      "z": 40.0,
-      "zone_id": "L3_WLOOP",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-10",
-      "name": "Level 3 \u00b7 intersection",
-      "x": -150.0,
-      "y": -400.0,
-      "z": 0.0,
-      "zone_id": "L3_WLOOP",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-11",
-      "name": "Level 3 \u00b7 intersection",
-      "x": -130.0,
-      "y": -400.0,
-      "z": -40.0,
-      "zone_id": "L3_WLOOP",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-12",
-      "name": "Level 3 \u00b7 work zone",
-      "x": 120.0,
-      "y": -400.0,
-      "z": -30.0,
-      "zone_id": "L3_MINE",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-13",
-      "name": "Level 3 \u00b7 intersection",
-      "x": 0.0,
-      "y": -400.0,
-      "z": 80.0,
-      "zone_id": "L3_RING",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-14",
-      "name": "Level 3 \u00b7 intersection",
-      "x": 60.0,
-      "y": -400.0,
-      "z": 70.0,
-      "zone_id": "L3_RING",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-15",
-      "name": "Level 3 \u00b7 intersection",
-      "x": -70.0,
-      "y": -400.0,
-      "z": 65.0,
-      "zone_id": "L3_RING",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-16",
-      "name": "Level 3 \u00b7 intersection",
-      "x": 0.0,
-      "y": -400.0,
-      "z": -80.0,
-      "zone_id": "L3_RING",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L3-17",
-      "name": "Level 3 \u00b7 intersection",
-      "x": -100.0,
-      "y": -400.0,
-      "z": 0.0,
-      "zone_id": "L3_RING",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-L4-01",
-      "name": "Level 4 \u00b7 intersection",
-      "x": 80.0,
-      "y": -550.0,
-      "z": 0.0,
-      "zone_id": "L4_ARM",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-L4-02",
-      "name": "Level 4 \u00b7 intersection",
-      "x": 130.0,
-      "y": -550.0,
-      "z": 10.0,
-      "zone_id": "L4_ARM",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-L4-03",
-      "name": "Level 4 \u00b7 work zone",
-      "x": 170.0,
-      "y": -550.0,
-      "z": -15.0,
-      "zone_id": "L4_ARM",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-L4-04",
-      "name": "Level 4 \u00b7 escape station",
-      "x": -70.0,
-      "y": -550.0,
-      "z": -55.0,
-      "zone_id": "ESCAPE_SHAFT",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-L4-05",
-      "name": "Level 4 \u00b7 lift station",
-      "x": 0.0,
-      "y": -550.0,
-      "z": 0.0,
-      "zone_id": "MAIN_SHAFT",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-L4-06",
-      "name": "Level 4 \u00b7 intersection",
-      "x": 0.0,
-      "y": -550.0,
-      "z": 100.0,
-      "zone_id": "L4_STEM",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-L4-07",
-      "name": "Level 4 \u00b7 work zone",
-      "x": 0.0,
-      "y": -550.0,
-      "z": 150.0,
-      "zone_id": "L4_STEM",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-L4-08",
-      "name": "Level 4 \u00b7 refuge",
-      "x": -40.0,
-      "y": -550.0,
-      "z": 20.0,
-      "zone_id": "L4_REFUGE",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-L4-09",
-      "name": "Level 4 \u00b7 vent station",
-      "x": 55.0,
-      "y": -550.0,
-      "z": 45.0,
-      "zone_id": "VENT_SHAFT",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-L4-10",
-      "name": "Level 4 \u00b7 intersection",
-      "x": -130.0,
-      "y": -550.0,
-      "z": 0.0,
-      "zone_id": "L4_ARM",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-SURFACE-01",
-      "name": "Surface \u00b7 surface",
-      "x": -70.0,
-      "y": 0.0,
-      "z": -55.0,
-      "zone_id": "ESCAPE_SHAFT",
-      "level_id": "SURFACE",
-      "depth_m": 0.0
-    },
-    {
-      "gateway_id": "GW-SURFACE-02",
-      "name": "Surface \u00b7 surface",
-      "x": 55.0,
-      "y": 0.0,
-      "z": 45.0,
-      "zone_id": "VENT_SHAFT",
-      "level_id": "SURFACE",
-      "depth_m": 0.0
-    },
-    {
-      "gateway_id": "GW-MESH-061",
-      "name": "Tunnel mesh \u00b7 MAIN_SHAFT",
-      "x": 0.0,
-      "y": -50.0,
-      "z": 0.0,
-      "zone_id": "MAIN_SHAFT",
-      "level_id": "SURFACE",
-      "depth_m": -50.0
-    },
-    {
-      "gateway_id": "GW-MESH-062",
-      "name": "Tunnel mesh \u00b7 VENT_SHAFT",
-      "x": 55.0,
-      "y": -50.0,
-      "z": 45.0,
-      "zone_id": "VENT_SHAFT",
-      "level_id": "SURFACE",
-      "depth_m": -50.0
-    },
-    {
-      "gateway_id": "GW-MESH-063",
-      "name": "Tunnel mesh \u00b7 ESCAPE_SHAFT",
-      "x": -70.0,
-      "y": -50.0,
-      "z": -55.0,
-      "zone_id": "ESCAPE_SHAFT",
-      "level_id": "SURFACE",
-      "depth_m": -50.0
-    },
-    {
-      "gateway_id": "GW-MESH-064",
-      "name": "Tunnel mesh \u00b7 MAIN_SHAFT",
-      "x": 0.0,
-      "y": -175.0,
-      "z": 0.0,
-      "zone_id": "MAIN_SHAFT",
-      "level_id": "L1",
-      "depth_m": -175.0
-    },
-    {
-      "gateway_id": "GW-MESH-065",
-      "name": "Tunnel mesh \u00b7 VENT_SHAFT",
-      "x": 55.0,
-      "y": -175.0,
-      "z": 45.0,
-      "zone_id": "VENT_SHAFT",
-      "level_id": "L1",
-      "depth_m": -175.0
-    },
-    {
-      "gateway_id": "GW-MESH-066",
-      "name": "Tunnel mesh \u00b7 ESCAPE_SHAFT",
-      "x": -70.0,
-      "y": -175.0,
-      "z": -55.0,
-      "zone_id": "ESCAPE_SHAFT",
-      "level_id": "L1",
-      "depth_m": -175.0
-    },
-    {
-      "gateway_id": "GW-MESH-067",
-      "name": "Tunnel mesh \u00b7 MAIN_SHAFT",
-      "x": 0.0,
-      "y": -325.0,
-      "z": 0.0,
-      "zone_id": "MAIN_SHAFT",
-      "level_id": "L2",
-      "depth_m": -325.0
-    },
-    {
-      "gateway_id": "GW-MESH-068",
-      "name": "Tunnel mesh \u00b7 VENT_SHAFT",
-      "x": 55.0,
-      "y": -325.0,
-      "z": 45.0,
-      "zone_id": "VENT_SHAFT",
-      "level_id": "L2",
-      "depth_m": -325.0
-    },
-    {
-      "gateway_id": "GW-MESH-069",
-      "name": "Tunnel mesh \u00b7 ESCAPE_SHAFT",
-      "x": -70.0,
-      "y": -325.0,
-      "z": -55.0,
-      "zone_id": "ESCAPE_SHAFT",
-      "level_id": "L2",
-      "depth_m": -325.0
-    },
-    {
-      "gateway_id": "GW-MESH-070",
-      "name": "Tunnel mesh \u00b7 MAIN_SHAFT",
-      "x": 0.0,
-      "y": -475.0,
-      "z": 0.0,
-      "zone_id": "MAIN_SHAFT",
-      "level_id": "L3",
-      "depth_m": -475.0
-    },
-    {
-      "gateway_id": "GW-MESH-071",
-      "name": "Tunnel mesh \u00b7 VENT_SHAFT",
-      "x": 55.0,
-      "y": -475.0,
-      "z": 45.0,
-      "zone_id": "VENT_SHAFT",
-      "level_id": "L3",
-      "depth_m": -475.0
-    },
-    {
-      "gateway_id": "GW-MESH-072",
-      "name": "Tunnel mesh \u00b7 ESCAPE_SHAFT",
-      "x": -70.0,
-      "y": -475.0,
-      "z": -55.0,
-      "zone_id": "ESCAPE_SHAFT",
-      "level_id": "L3",
-      "depth_m": -475.0
-    },
-    {
-      "gateway_id": "GW-MESH-073",
-      "name": "Tunnel mesh \u00b7 L1_LOOP",
-      "x": 37.5,
-      "y": -100.0,
-      "z": 57.5,
-      "zone_id": "L1_LOOP",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-MESH-074",
-      "name": "Tunnel mesh \u00b7 L1_WEST",
-      "x": -80.0,
-      "y": -100.0,
-      "z": -22.5,
-      "zone_id": "L1_WEST",
-      "level_id": "L1",
-      "depth_m": -100.0
-    },
-    {
-      "gateway_id": "GW-MESH-075",
-      "name": "Tunnel mesh \u00b7 L2_BRANCH",
-      "x": 100.0,
-      "y": -250.0,
-      "z": -22.5,
-      "zone_id": "L2_BRANCH",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-MESH-076",
-      "name": "Tunnel mesh \u00b7 L2_WORK",
-      "x": -65.0,
-      "y": -250.0,
-      "z": 32.5,
-      "zone_id": "L2_WORK",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-MESH-077",
-      "name": "Tunnel mesh \u00b7 L2_LINK",
-      "x": -90.0,
-      "y": -250.0,
-      "z": -27.5,
-      "zone_id": "L2_LINK",
-      "level_id": "L2",
-      "depth_m": -250.0
-    },
-    {
-      "gateway_id": "GW-MESH-078",
-      "name": "Tunnel mesh \u00b7 L3_RING",
-      "x": 75.0,
-      "y": -400.0,
-      "z": 35.0,
-      "zone_id": "L3_RING",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-MESH-079",
-      "name": "Tunnel mesh \u00b7 L3_RING",
-      "x": 72.5,
-      "y": -400.0,
-      "z": -35.0,
-      "zone_id": "L3_RING",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-MESH-080",
-      "name": "Tunnel mesh \u00b7 L3_RING",
-      "x": -85.0,
-      "y": -400.0,
-      "z": 32.5,
-      "zone_id": "L3_RING",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-MESH-081",
-      "name": "Tunnel mesh \u00b7 L3_RING",
-      "x": -35.0,
-      "y": -400.0,
-      "z": 72.5,
-      "zone_id": "L3_RING",
-      "level_id": "L3",
-      "depth_m": -400.0
-    },
-    {
-      "gateway_id": "GW-MESH-082",
-      "name": "Tunnel mesh \u00b7 L4_STEM",
-      "x": 0.0,
-      "y": -550.0,
-      "z": 50.0,
-      "zone_id": "L4_STEM",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-MESH-083",
-      "name": "Tunnel mesh \u00b7 L4_ARM",
-      "x": 40.0,
-      "y": -550.0,
-      "z": 0.0,
-      "zone_id": "L4_ARM",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-MESH-084",
-      "name": "Tunnel mesh \u00b7 L4_LINK",
-      "x": -100.0,
-      "y": -550.0,
-      "z": -27.5,
-      "zone_id": "L4_LINK",
-      "level_id": "L4",
-      "depth_m": -550.0
-    },
-    {
-      "gateway_id": "GW-MESH-085",
-      "name": "Tunnel mesh \u00b7 DECLINE_RAMP",
-      "x": 90.0,
-      "y": -325.0,
-      "z": -40.0,
-      "zone_id": "DECLINE_RAMP",
-      "level_id": "L2",
-      "depth_m": -325.0
     }
   ]
 }

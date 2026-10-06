@@ -7,3 +7,8 @@ __pycache__/
 .pytest_cache/
 .env
 *.log
+backups/
+*.zip
+.DS_Store
+
+*.png

@@ -2,53 +2,53 @@
   "vehicles": [
     {
       "vehicle_id": "LHD-01",
-      "name": "Scooptram Alpha",
+      "name": "LHD 14t · 750 Face",
       "kind": "lhd",
       "driver_worker_id": "W05",
-      "start_edge": "L2_south_0",
+      "start_edge": "L750_to_N1",
       "speed_mps": 3.2,
-      "load_node_ids": ["L2_S2", "L2_E3", "L2_N2", "L2_W3"],
-      "dump_node_ids": ["L2_LIFT", "L2_WORK"]
+      "load_node_ids": ["L750_STOPE_N1", "L750_STOPE_N2", "L750_STOPE_N3", "L750_STOPE_N4"],
+      "dump_node_ids": ["L750_TIP1", "L750_TIP2", "L750_OREPASS"]
     },
     {
       "vehicle_id": "LHD-02",
-      "name": "Scooptram Bravo",
+      "name": "LHD 18t · 850 Face",
       "kind": "lhd",
       "driver_worker_id": "W14",
-      "start_edge": "L3_ring_0",
+      "start_edge": "L850_to_E1",
       "speed_mps": 3.0,
-      "load_node_ids": ["L3_MINE", "L4_MINE", "L4_E3", "L4_N2"],
-      "dump_node_ids": ["L3_LIFT", "L4_LIFT"]
+      "load_node_ids": ["L850_STOPE_E1", "L850_STOPE_E2", "L850_STOPE_E3", "L850_STOPE_E4"],
+      "dump_node_ids": ["L850_TIP1", "L850_TIP2", "L850_OREPASS"]
     },
     {
       "vehicle_id": "TRK-01",
-      "name": "Ore Trailer 1",
+      "name": "54t Truck · Haul to S3",
       "kind": "ore_trailer",
       "driver_worker_id": "W03",
-      "start_edge": "L1_loop_0",
-      "speed_mps": 2.6,
-      "load_node_ids": ["L1_MINE_E", "L1_MINE_W", "L1_WORK"],
-      "dump_node_ids": ["L1_LIFT"]
+      "start_edge": "L750_TIP1_E",
+      "speed_mps": 2.8,
+      "load_node_ids": ["L750_OREPASS", "L750_TIP1", "L850_OREPASS"],
+      "dump_node_ids": ["L750_TIP1", "L750_TIP2", "L850_TIP1", "L950_TIP"]
     },
     {
       "vehicle_id": "TRK-02",
-      "name": "Ore Trailer 2",
+      "name": "42t Truck · 850 Haulage",
       "kind": "ore_trailer",
       "driver_worker_id": null,
-      "start_edge": "L2_spine_0",
-      "speed_mps": 2.4,
-      "load_node_ids": ["L2_E3", "L2_W3", "L2_N2"],
-      "dump_node_ids": ["L2_LIFT"]
+      "start_edge": "L850_RING_0",
+      "speed_mps": 2.5,
+      "load_node_ids": ["L850_OREPASS", "L850_STOPE_E1", "L850_STOPE_E2"],
+      "dump_node_ids": ["L850_TIP1", "L850_TIP2"]
     },
     {
       "vehicle_id": "TRK-03",
-      "name": "Ore Trailer 3",
+      "name": "54t Truck · 950 Crusher feed",
       "kind": "ore_trailer",
       "driver_worker_id": null,
-      "start_edge": "L4_arm_0",
-      "speed_mps": 2.5,
-      "load_node_ids": ["L4_MINE", "L4_E3", "L4_N2"],
-      "dump_node_ids": ["L4_LIFT", "L3_LIFT"]
+      "start_edge": "L950_RING_0",
+      "speed_mps": 2.4,
+      "load_node_ids": ["L950_OREPASS", "L950_STOPE_P1", "L950_STOPE_P2"],
+      "dump_node_ids": ["L950_TIP", "L950_CRUSHER"]
     }
   ]
 }

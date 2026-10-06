@@ -8,9 +8,9 @@ export default function Header({ status }: { status: SimulationStatus | null }) 
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-6">
         <div className="min-w-0 shrink-0 lg:w-56 xl:w-64">
           <h1 className="truncate text-base font-bold tracking-tight text-slate-100 sm:text-lg">
-            Smart Mine Safety System
+            Platreef Safety Simulation
           </h1>
-          <p className="truncate text-xs text-slate-500">Underground tracking &amp; safety</p>
+          <p className="truncate text-xs text-slate-500">Mokopane · inspired underground layout</p>
         </div>
 
         <div className="grid min-w-0 flex-1 grid-cols-3 gap-2 rounded-lg border border-border/60 bg-panel2/80 px-2 py-2 sm:grid-cols-6 sm:gap-3 sm:px-3">

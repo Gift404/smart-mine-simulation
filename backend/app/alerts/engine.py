@@ -62,6 +62,10 @@ class AlertEngine:
                                       edge_id, zone_id, sim_ts, "Lost wearable communication")]
         return []
 
+    def resolve(self, worker_id: str, alert_type: str, sim_ts: float) -> None:
+        """Public auto-resolve for external engines (e.g. geofencing)."""
+        self._auto_resolve(worker_id, alert_type, True, sim_ts)
+
     def acknowledge(self, alert_id: str, sim_ts: float) -> Alert | None:
         alert = self.all_alerts.get(alert_id)
         if alert and alert.status == AlertStatus.ACTIVE:

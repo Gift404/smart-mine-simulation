@@ -1,0 +1,15 @@
+.venv
+**/__pycache__
+**/.pytest_cache
+**/node_modules
+frontend/dist
+frontend/node_modules
+backend/.venv
+.git
+backups
+*.zip
+.env
+**/*.log
+.pytest_cache
+smart-mine-claude-pack.zip
+"ChatGPT Image Sep 21, 2026, 09_53_34 AM.png"

@@ -56,7 +56,11 @@ class WorkerSimulator:
         for wcfg in cfg["workers"]:
             edge_id = wcfg["start_edge"]
             edge = mine.edges[edge_id]
-            dist = self.rng.uniform(0, edge.length)
+            frac = wcfg.get("start_distance_fraction")
+            if frac is not None:
+                dist = float(frac) * edge.length
+            else:
+                dist = self.rng.uniform(0, edge.length)
             x, y, z = mine.point_on_edge(edge_id, dist)
             w = Worker(
                 worker_id=wcfg["worker_id"],
@@ -151,6 +155,13 @@ class WorkerSimulator:
             w.paused_until_sim_ts = sim_time_s + self.rng.uniform(*REFUGE_DWELL)
             return True
 
+        # Authorized blasters may work in explosives bays (restricted)
+        if node.type == "restricted" and w.role == "Blaster" and self.rng.random() < 0.55:
+            w.activity = "Emulsion / charge prep"
+            w.activity_detail = node_id
+            w.paused_until_sim_ts = sim_time_s + self.rng.uniform(20.0, 50.0)
+            return True
+
         return False
 
     def _prefer_work_edges(self, w: Worker, candidates: list[str], node_id: str) -> list[str]:
@@ -158,6 +169,8 @@ class WorkerSimulator:
         prefer_types: set[str] = set()
         if w.role in FACE_WORK_ROLES:
             prefer_types.add("work_zone")
+        if w.role == "Blaster":
+            prefer_types.add("restricted")
         if w.role in WORKSHOP_ROLES:
             prefer_types.add("workshop")
         if not prefer_types:

@@ -77,6 +77,9 @@ export interface Worker {
   behavior_profile: string;
   health_state: HealthState;
   mode: WearableMode;
+  watch_vibrating?: boolean;
+  geofence_id?: string | null;
+  geofence_name?: string | null;
   last_transmission_sim_ts: number;
   incapacitated: boolean;
   activity?: string;
@@ -217,6 +220,26 @@ export interface Job {
   priority: string;
   status: JobStatus;
   created_sim_ts: number;
+}
+
+export interface Geofence {
+  fence_id: string;
+  name: string;
+  node_ids: string[];
+  zone_ids: string[];
+  radius_m: number;
+  severity: AlertSeverity;
+  allowed_roles: string[];
+  message: string;
+  nodes: Array<{
+    id: string;
+    x: number;
+    y: number;
+    z: number;
+    level_id?: string | null;
+    type?: string;
+    name?: string | null;
+  }>;
 }
 
 export interface SimulationStatus {

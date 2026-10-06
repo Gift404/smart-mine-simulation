@@ -20,9 +20,9 @@ interface Props {
 const PADDING = 50;
 const LERP = 0.28;
 const MAX_STEP = 1.2;
-/** Base visible window (world metres) at zoom = 1 */
-const BASE_VIEW_W = 220;
-const BASE_VIEW_H = 180;
+/** Base visible window (world metres) at zoom = 1 — sized for Platreef footprint */
+const BASE_VIEW_W = 520;
+const BASE_VIEW_H = 420;
 const ZOOM_MIN = 0.12;
 const ZOOM_MAX = 3.5;
 const ZOOM_STEP = 0.15;
@@ -37,12 +37,13 @@ export default function MineMap({
 }: Props) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [pinnedId, setPinnedId] = useState<string | null>(null);
+  const [levelFilter, setLevelFilter] = useState<string>("ALL");
   const [displayPos, setDisplayPos] = useState<Record<string, { x: number; y: number }>>({});
-  const [pan, setPan] = useState({ x: -40, y: 10 });
-  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: -80, y: -80 });
+  const [zoom, setZoom] = useState(0.55);
   const targetsRef = useRef<Record<string, { x: number; y: number }>>({});
   const displayRef = useRef<Record<string, { x: number; y: number }>>({});
-  const panRef = useRef({ x: -40, y: 10 });
+  const panRef = useRef({ x: -80, y: -80 });
   const panTargetRef = useRef<{ x: number; y: number } | null>(null);
   const trackingIdRef = useRef<string | null>(null);
   const dragRef = useRef<{ ox: number; oy: number; px: number; py: number } | null>(null);
@@ -60,9 +61,10 @@ export default function MineMap({
   useEffect(() => {
     const next: Record<string, { x: number; y: number }> = {};
     for (const w of Object.values(workers)) {
-      next[w.worker_id] = { x: w.x, y: w.y };
+      // Plan view: X east, Z north (mine Y is elevation)
+      next[w.worker_id] = { x: w.x, y: w.z ?? 0 };
       if (!displayRef.current[w.worker_id]) {
-        displayRef.current[w.worker_id] = { x: w.x, y: w.y };
+        displayRef.current[w.worker_id] = { x: w.x, y: w.z ?? 0 };
       }
     }
     targetsRef.current = next;
@@ -138,18 +140,18 @@ export default function MineMap({
   const world = useMemo(() => {
     if (!mine) return null;
     const xs = mine.nodes.map((n) => n.x);
-    const ys = mine.nodes.map((n) => n.y);
+    const zs = mine.nodes.map((n) => n.z ?? 0);
     for (const p of mine.portals ?? []) {
       const n = mine.nodes.find((node) => node.id === p.node_id);
       if (!n) continue;
       xs.push(n.x + p.dx);
-      ys.push(n.y + p.dy);
+      zs.push((n.z ?? 0) + (p.dz ?? 0));
     }
     return {
       minX: Math.min(...xs) - PADDING,
       maxX: Math.max(...xs) + PADDING,
-      minY: Math.min(...ys) - PADDING,
-      maxY: Math.max(...ys) + PADDING,
+      minY: Math.min(...zs) - PADDING,
+      maxY: Math.max(...zs) + PADDING,
     };
   }, [mine]);
 
@@ -178,7 +180,7 @@ export default function MineMap({
     setPinnedId(trackingId);
     const w = workers[trackingId];
     if (!w) return;
-    const pos = displayRef.current[trackingId] ?? { x: w.x, y: w.y };
+    const pos = displayRef.current[trackingId] ?? { x: w.x, y: w.z ?? 0 };
     panTargetRef.current = clampPan(pos.x - viewW / 2, pos.y - viewH / 2);
   }, [trackingId, workers, viewW, viewH]);
 
@@ -187,7 +189,7 @@ export default function MineMap({
     if (!focusGatewayId) return;
     const g = gateways[focusGatewayId];
     if (!g) return;
-    panTargetRef.current = clampPan(g.x - viewW / 2, g.y - viewH / 2);
+    panTargetRef.current = clampPan(g.x - viewW / 2, (g.z ?? 0) - viewH / 2);
   }, [focusGatewayId, gateways, viewW, viewH]);
 
   // Clear tracking if miner disappears
@@ -202,9 +204,23 @@ export default function MineMap({
   const nodeById = Object.fromEntries(mine.nodes.map((n) => [n.id, n]));
   const focusWorker = focusId ? workers[focusId] : null;
   const focusPos = focusWorker
-    ? (displayPos[focusWorker.worker_id] ?? { x: focusWorker.x, y: focusWorker.y })
+    ? (displayPos[focusWorker.worker_id] ?? { x: focusWorker.x, y: focusWorker.z ?? 0 })
     : null;
   const trackedWorker = trackingId ? workers[trackingId] : null;
+  const levels = mine.levels ?? [];
+
+  const nodeVisible = (levelId: string | null | undefined) => {
+    if (levelFilter === "ALL") return true;
+    return levelId === levelFilter;
+  };
+  const edgeVisible = (e: { level_id?: string | null; kind?: string; start: string; end: string }) => {
+    if (levelFilter === "ALL") return true;
+    if (e.kind && e.kind !== "tunnel" && e.kind !== "ramp") return true;
+    if (e.level_id) return e.level_id === levelFilter;
+    const a = nodeById[e.start];
+    const b = nodeById[e.end];
+    return a?.level_id === levelFilter || b?.level_id === levelFilter;
+  };
 
   const onPointerDown = (e: ReactPointerEvent) => {
     if (e.button !== 0) return;
@@ -253,14 +269,37 @@ export default function MineMap({
   };
 
   const offScreenCount = Object.values(workers).filter((w) => {
-    const p = displayPos[w.worker_id] ?? { x: w.x, y: w.y };
+    if (levelFilter !== "ALL" && w.level !== levelFilter) return false;
+    const p = displayPos[w.worker_id] ?? { x: w.x, y: w.z ?? 0 };
     return p.x < pan.x || p.x > pan.x + viewW || p.y < pan.y || p.y > pan.y + viewH;
   }).length;
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-1.5">
       <div className="flex shrink-0 flex-wrap items-center gap-2 px-1 text-[10px] uppercase tracking-wider text-slate-500">
-        <span>Large mine · pan / zoom · {Object.keys(workers).length} miners</span>
+        <span>2D plan · pan / zoom · {Object.keys(workers).length} miners</span>
+        <span className="mr-0.5 text-slate-600">Level</span>
+        <button
+          type="button"
+          onClick={() => setLevelFilter("ALL")}
+          className={`rounded px-2 py-0.5 text-[10px] font-semibold normal-case tracking-normal ${
+            levelFilter === "ALL" ? "bg-slate-600 text-white" : "bg-panel text-slate-400 hover:text-slate-200"
+          }`}
+        >
+          All
+        </button>
+        {levels.map((lv) => (
+          <button
+            key={lv.id}
+            type="button"
+            onClick={() => setLevelFilter(lv.id)}
+            className={`rounded px-2 py-0.5 text-[10px] font-semibold normal-case tracking-normal ${
+              levelFilter === lv.id ? "bg-slate-600 text-white" : "bg-panel text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            {lv.label}
+          </button>
+        ))}
         {offScreenCount > 0 && !trackingId && (
           <span className="rounded bg-status-warning/20 px-1.5 py-0.5 text-status-warning">
             {offScreenCount} off-screen
@@ -309,9 +348,9 @@ export default function MineMap({
           type="button"
           onClick={() => {
             if (trackingId) onStopTracking();
-            setZoom(1);
+            setZoom(0.55);
             panTargetRef.current = null;
-            const next = clampPan(-40, 10);
+            const next = clampPan(-80, -80);
             panRef.current = next;
             setPan(next);
           }}
@@ -339,15 +378,15 @@ export default function MineMap({
         >
           {(mine.portals ?? []).map((p) => {
             const n = nodeById[p.node_id];
-            if (!n) return null;
+            if (!n || !nodeVisible(n.level_id)) return null;
             const x2 = n.x + p.dx;
-            const y2 = n.y + p.dy;
+            const z2 = (n.z ?? 0) + (p.dz ?? 0);
             return (
               <g key={`portal-${p.node_id}`}>
-                <line x1={n.x} y1={n.y} x2={x2} y2={y2}
+                <line x1={n.x} y1={n.z ?? 0} x2={x2} y2={z2}
                       stroke="#3d4f61" strokeWidth={5} strokeLinecap="round"
                       strokeDasharray="3 4" opacity={0.75} />
-                <text x={x2} y={y2 - 4} fontSize={4} fill="#6b7c8d" textAnchor="middle">∞</text>
+                <text x={x2} y={z2 - 4} fontSize={4} fill="#6b7c8d" textAnchor="middle">∞</text>
               </g>
             );
           })}
@@ -355,46 +394,60 @@ export default function MineMap({
           {mine.edges.map((e) => {
             const a = nodeById[e.start];
             const b = nodeById[e.end];
+            if (!a || !b || !edgeVisible(e)) return null;
+            const isShaft = !!(e.kind && e.kind !== "tunnel" && e.kind !== "ramp");
+            const dim = levelFilter !== "ALL" && isShaft && e.level_id !== levelFilter;
             return (
-              <line key={e.id} x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                    stroke="#2c3a48" strokeWidth={6} strokeLinecap="round" />
+              <line key={e.id} x1={a.x} y1={a.z ?? 0} x2={b.x} y2={b.z ?? 0}
+                    stroke={isShaft ? "#475569" : "#2c3a48"}
+                    strokeWidth={isShaft ? 3 : 6}
+                    strokeLinecap="round"
+                    opacity={dim ? 0.25 : 1} />
             );
           })}
 
-          {mine.nodes.map((n) => (
-            <g key={n.id}>
-              <circle cx={n.x} cy={n.y} r={n.type === "intersection" ? 2.5 : 5}
-                      fill={nodeColor(n.type)} />
-              {n.type !== "intersection" && (
-                <text x={n.x} y={n.y - 8} fontSize={5} fill="#8a97a6" textAnchor="middle">
-                  {n.id.replace(/_/g, " ")}
-                </text>
-              )}
-            </g>
-          ))}
+          {mine.nodes.map((n) => {
+            if (!nodeVisible(n.level_id)) return null;
+            const nz = n.z ?? 0;
+            return (
+              <g key={n.id}>
+                <circle cx={n.x} cy={nz} r={n.type === "intersection" ? 2.5 : 5}
+                        fill={nodeColor(n.type)} />
+                {n.type !== "intersection" && n.type !== "surface" && (
+                  <text x={n.x} y={nz - 8} fontSize={5} fill="#8a97a6" textAnchor="middle">
+                    {n.id.replace(/_/g, " ")}
+                  </text>
+                )}
+              </g>
+            );
+          })}
 
           {Object.values(gateways).map((g) => {
+            if (!nodeVisible(g.level_id)) return null;
             const focused = g.gateway_id === focusGatewayId;
+            const gz = g.z ?? 0;
             return (
               <g key={g.gateway_id}>
                 {focused && (
-                  <circle cx={g.x} cy={g.y} r={11} fill="none" stroke="#38bdf8" strokeWidth={1.4} strokeDasharray="3 2">
+                  <circle cx={g.x} cy={gz} r={11} fill="none" stroke="#38bdf8" strokeWidth={1.4} strokeDasharray="3 2">
                     <animate attributeName="stroke-dashoffset" values="0;10" dur="1s" repeatCount="indefinite" />
                   </circle>
                 )}
-                <rect x={g.x - 3} y={g.y - 3} width={6} height={6}
+                <rect x={g.x - 3} y={gz - 3} width={6} height={6}
                       fill={g.status === "ONLINE" ? "#3b82f6" : "#f13c3c"} opacity={0.85} />
-                <text x={g.x} y={g.y + 10} fontSize={4}
+                <text x={g.x} y={gz + 10} fontSize={4}
                       fill={focused ? "#7dd3fc" : "#5c6b7a"} textAnchor="middle">{g.gateway_id}</text>
               </g>
             );
           })}
 
           {Object.values(workers).map((w) => {
+            if (levelFilter !== "ALL" && w.level !== levelFilter) return null;
             const status = workerDisplayStatus(w, alerts);
             const selected = w.worker_id === selectedWorkerId || w.worker_id === focusId;
             const tracking = w.worker_id === trackingId;
-            const pos = displayPos[w.worker_id] ?? { x: w.x, y: w.y };
+            const vibrating = !!w.watch_vibrating;
+            const pos = displayPos[w.worker_id] ?? { x: w.x, y: w.z ?? 0 };
             const critical = status === "CRITICAL";
             return (
               <g
@@ -409,8 +462,10 @@ export default function MineMap({
                   setPinnedId(w.worker_id);
                 }}
               >
-                {tracking && (
-                  <circle cx={pos.x} cy={pos.y} r={12} fill="none" stroke="#38bdf8" strokeWidth={1.4} strokeDasharray="3 2">
+                {(tracking || vibrating) && (
+                  <circle cx={pos.x} cy={pos.y} r={12} fill="none"
+                          stroke={vibrating ? "#fb7185" : "#38bdf8"}
+                          strokeWidth={1.4} strokeDasharray="3 2">
                     <animate attributeName="stroke-dashoffset" values="0;10" dur="1s" repeatCount="indefinite" />
                   </circle>
                 )}
@@ -423,7 +478,9 @@ export default function MineMap({
                     <animate attributeName="opacity" values="0.9;0.2;0.9" dur="0.9s" repeatCount="indefinite" />
                   </circle>
                 )}
-                <circle cx={pos.x} cy={pos.y} r={5.5} fill={STATUS_COLOR[status]} stroke="#0a0e13" strokeWidth={1} />
+                <circle cx={pos.x} cy={pos.y} r={5.5}
+                        fill={vibrating ? "#fb7185" : STATUS_COLOR[status]}
+                        stroke="#0a0e13" strokeWidth={1} />
                 <circle cx={pos.x} cy={pos.y} r={10} fill="transparent" />
                 <text x={pos.x} y={pos.y + 1.6} fontSize={4} fill="#0a0e13" textAnchor="middle" fontWeight="bold">
                   {w.worker_id.replace("W", "")}
@@ -465,7 +522,7 @@ export default function MineMap({
           <span className="w-10 shrink-0 text-right uppercase tracking-wider">East</span>
         </label>
         <label className="flex items-center gap-2 text-[10px] text-slate-500">
-          <span className="w-10 shrink-0 uppercase tracking-wider">North</span>
+          <span className="w-10 shrink-0 uppercase tracking-wider">South</span>
           <input
             type="range"
             min={panLimits.minPanY}
@@ -475,7 +532,7 @@ export default function MineMap({
             onChange={(e) => setPanManual({ ...pan, y: Number(e.target.value) })}
             className="h-1.5 w-full cursor-pointer accent-slate-400"
           />
-          <span className="w-10 shrink-0 text-right uppercase tracking-wider">South</span>
+          <span className="w-10 shrink-0 text-right uppercase tracking-wider">North</span>
         </label>
       </div>
     </div>
@@ -571,10 +628,19 @@ function DetailStat({ label, value }: { label: string; value: string }) {
 
 function nodeColor(type: string): string {
   switch (type) {
-    case "shaft": return "#93c5fd";
+    case "shaft":
+    case "lift_station":
+    case "vent_station":
+      return "#93c5fd";
     case "work_zone": return "#fbbf24";
     case "refuge": return "#4ade80";
-    case "restricted": return "#f87171";
+    case "restricted": return "#fb7185";
+    case "workshop": return "#fb923c";
+    case "tip":
+    case "crusher":
+    case "ore_pass":
+      return "#d97706";
+    case "emergency": return "#f87171";
     default: return "#556575";
   }
 }

@@ -1,5 +1,6 @@
 from __future__ import annotations
 import asyncio
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -67,6 +68,9 @@ async def lifespan(app: FastAPI):
             logger.warning("MQTT broker unavailable (%s); running with WebSocket-only bus", e)
     task = asyncio.create_task(_simulation_loop())
     logger.info("simulation loop started tick_hz=%.1f", SIM_TICK_HZ)
+    if os.getenv("AUTO_START", "true").lower() in ("1", "true", "yes"):
+        engine.start(seed_demo=False)
+        logger.info("simulation auto-started (AUTO_START)")
     yield
     task.cancel()
     logger.info("shutdown")
@@ -139,6 +143,11 @@ def list_vehicles():
 @app.get("/api/alerts")
 def list_alerts():
     return [a.model_dump() for a in engine.alert_engine.all_alerts.values()]
+
+
+@app.get("/api/geofences")
+def list_geofences():
+    return engine.geofence_engine.list_fences()
 
 
 @app.post("/api/alerts/{alert_id}/acknowledge")

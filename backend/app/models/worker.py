@@ -38,6 +38,10 @@ class Worker(BaseModel):
 
     health_state: HealthState = HealthState.NORMAL
     mode: WearableMode = WearableMode.NORMAL
+    # Watch haptic alarm while inside an unauthorized geofence
+    watch_vibrating: bool = False
+    geofence_id: str | None = None
+    geofence_name: str | None = None
 
     last_transmission_sim_ts: float = 0.0
     paused_until_sim_ts: float = 0.0

@@ -16,7 +16,7 @@ callable, not directly on MqttBus, so it can be unit tested without a broker.
 from __future__ import annotations
 from typing import Callable
 
-from app.config import MINE_CONFIG, WORKERS_CONFIG, GATEWAYS_CONFIG, THRESHOLDS_CONFIG, SENSORS_CONFIG, VEHICLES_CONFIG
+from app.config import MINE_CONFIG, WORKERS_CONFIG, GATEWAYS_CONFIG, THRESHOLDS_CONFIG, SENSORS_CONFIG, VEHICLES_CONFIG, GEOFENCES_CONFIG
 from app.simulator.mine import MineGraph
 from app.simulator.workers import WorkerSimulator, nearest_gateway_id
 from app.simulator.gateways import GatewaySimulator
@@ -29,9 +29,11 @@ from app.positioning.multilateration import estimate_position
 from app.positioning.map_matching import snap_to_graph, confidence_score
 from app.positioning.imu_fusion import ImuFusionTracker
 from app.alerts.engine import AlertEngine
+from app.alerts.geofence import GeofenceEngine
 from app.alerts.thresholds import Thresholds
 from app.jobs.engine import JobEngine
 from app.models.worker import WearableMode
+from app.models.alert import AlertSeverity
 from app.mqtt import topics
 from app.logging_config import get_logger
 
@@ -54,6 +56,7 @@ class SimulationEngine:
         self.scenario_engine = ScenarioEngine(self.wearable_sim, self.worker_sim.workers, self.mine)
         self.thresholds = Thresholds.load(THRESHOLDS_CONFIG)
         self.alert_engine = AlertEngine(self.thresholds)
+        self.geofence_engine = GeofenceEngine(GEOFENCES_CONFIG, self.mine, self.alert_engine)
         self.job_engine = JobEngine()
         self.imu_tracker = ImuFusionTracker(self.mine)
 
@@ -116,8 +119,69 @@ class SimulationEngine:
             if self.sim_time_s - worker.last_transmission_sim_ts >= interval:
                 self._transmit_and_process(worker)
 
+        self._check_geofences()
         self._check_comm_loss()
         self._update_mine_sensors()
+
+    def _check_geofences(self) -> None:
+        """Restricted-area entry → watch vibrate + system alert / warning."""
+        for worker in self.worker_sim.workers.values():
+            events = self.geofence_engine.check_worker(worker, self.sim_time_s)
+            if not events:
+                continue
+
+            tag_id = worker.wearable_id
+            entered = any(e.entered for e in events)
+            exited_all = any(e.exited for e in events) and not self.geofence_engine.worker_should_vibrate(
+                worker.worker_id
+            )
+            still = self.geofence_engine.worker_should_vibrate(worker.worker_id)
+
+            for ev in events:
+                if ev.entered and ev.alert:
+                    self.publish(topics.alert_topic(tag_id), ev.alert.model_dump())
+                    job = self.job_engine.create_from_alert(ev.alert, self.sim_time_s)
+                    if job:
+                        self.publish(f"mine/section3/job/{job.job_id}", job.model_dump())
+                    self.publish(topics.command_topic(tag_id), {
+                        "command": "VIBRATE_ON",
+                        "reason": "RESTRICTED_ZONE",
+                        "fence_id": ev.fence_id,
+                        "fence_name": ev.fence_name,
+                        "severity": ev.severity.value,
+                        "message": ev.description,
+                        "pattern": "urgent" if ev.severity == AlertSeverity.CRITICAL else "warning",
+                    })
+
+            if entered or still:
+                worker.watch_vibrating = True
+                # Prefer the highest-severity active fence for display
+                critical = next(
+                    (
+                        e for e in events
+                        if (e.entered or e.still_inside) and e.severity == AlertSeverity.CRITICAL
+                    ),
+                    None,
+                )
+                show = critical or next((e for e in events if e.entered or e.still_inside), None)
+                if show:
+                    worker.geofence_id = show.fence_id
+                    worker.geofence_name = show.fence_name
+                if worker.mode != WearableMode.BURST:
+                    worker.mode = WearableMode.BURST
+                    self.publish(topics.command_topic(tag_id), {"command": "BURST_ON"})
+            elif exited_all:
+                worker.watch_vibrating = False
+                worker.geofence_id = None
+                worker.geofence_name = None
+                self.publish(topics.command_topic(tag_id), {
+                    "command": "VIBRATE_OFF",
+                    "reason": "LEFT_RESTRICTED_ZONE",
+                })
+                if not self.alert_engine.is_worker_in_alarm(worker.worker_id):
+                    if worker.mode != WearableMode.NORMAL:
+                        worker.mode = WearableMode.NORMAL
+                        self.publish(topics.command_topic(tag_id), {"command": "BURST_OFF"})
 
     def _sync_drivers_and_publish_vehicles(self) -> None:
         """Ride drivers with their vehicle and publish vehicle positions every tick."""
@@ -203,8 +267,9 @@ class SimulationEngine:
 
         last_ts = self._last_display_pub_ts.get(tag_id, -1e9)
         idle = distance < 0.05
-        # While working in place, still refresh activity labels periodically
-        if idle and (self.sim_time_s - last_ts) < (0.5 if worker.activity != "Transit" else 0.15):
+        # While vibrating / working in place, still refresh so the watch alarm shows live
+        refresh_s = 0.25 if worker.watch_vibrating else (0.5 if worker.activity != "Transit" else 0.15)
+        if idle and (self.sim_time_s - last_ts) < refresh_s:
             return
 
         confidence, label = self._confidence_at_tag.get(tag_id, (0.55, "MEDIUM"))
@@ -230,6 +295,10 @@ class SimulationEngine:
             "activity": worker.activity,
             "activity_detail": worker.activity_detail,
             "assigned_vehicle_id": worker.assigned_vehicle_id,
+            "watch_vibrating": worker.watch_vibrating,
+            "geofence_id": worker.geofence_id,
+            "geofence_name": worker.geofence_name,
+            "mode": worker.mode.value if hasattr(worker.mode, "value") else worker.mode,
         })
 
     def _transmit_and_process(self, worker) -> None:

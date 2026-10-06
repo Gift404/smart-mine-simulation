@@ -1,0 +1,12 @@
+# Render Blueprint — single public URL for the Smart Mine Simulation
+services:
+  - type: web
+    name: smart-mine-simulation
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: AUTO_START
+        value: "true"

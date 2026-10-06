@@ -184,8 +184,8 @@ export default function SystemsPage() {
                     condition: sensorCondition(s),
                     detail: s.linked_gateway_id ? `via ${s.linked_gateway_id}` : zoneName(s.zone_id),
                   })),
-              ].map((row) => (
-                <DeviceRow key={row.key} {...row} />
+              ].map(({ key, ...row }) => (
+                <DeviceRow key={key} {...row} />
               ))}
             </NamedGroup>
 
@@ -210,8 +210,8 @@ export default function SystemsPage() {
                     condition: "Good" as Condition,
                     detail: zoneName(s.zone_id),
                   })),
-              ].map((row) => (
-                <DeviceRow key={row.key} {...row} />
+              ].map(({ key, ...row }) => (
+                <DeviceRow key={key} {...row} />
               ))}
             </NamedGroup>
           </div>

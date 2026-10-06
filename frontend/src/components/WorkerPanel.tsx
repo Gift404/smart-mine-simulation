@@ -104,6 +104,11 @@ function MinerCard({
             {worker.level ?? "—"} · depth {Math.round(worker.depth_m ?? worker.y)} m
             {worker.mode === "burst" ? " · BURST" : ""}
           </div>
+          {worker.watch_vibrating && (
+            <div className="animate-pulse font-semibold text-rose-400">
+              Watch vibrating · {worker.geofence_name ?? "restricted zone"}
+            </div>
+          )}
           <div className="font-mono text-slate-500">
             x {worker.x.toFixed(0)} · z {(worker.z ?? 0).toFixed(0)} · {worker.current_tunnel ?? worker.current_edge_id}
           </div>

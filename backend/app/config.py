@@ -12,6 +12,7 @@ MINE_CONFIG = CONFIG_DIR / "mine.json"
 WORKERS_CONFIG = CONFIG_DIR / "workers.json"
 GATEWAYS_CONFIG = CONFIG_DIR / "gateways.json"
 SENSORS_CONFIG = CONFIG_DIR / "sensors.json"
+GEOFENCES_CONFIG = CONFIG_DIR / "geofences.json"
 THRESHOLDS_CONFIG = CONFIG_DIR / "thresholds.json"
 VEHICLES_CONFIG = CONFIG_DIR / "vehicles.json"
 

@@ -1,6 +1,13 @@
-import type { Worker, Gateway, Alert, Job, SimulationStatus, ScenarioName, MineGraph, MineSensor, Vehicle } from "../types";
+import type { Worker, Gateway, Alert, Job, SimulationStatus, ScenarioName, MineGraph, MineSensor, Vehicle, Geofence } from "../types";
 
-const BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+function apiBase(): string {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL as string;
+  // Vite dev → local API; production build → same origin (nginx proxies /api)
+  if (import.meta.env.DEV) return "http://localhost:8000";
+  return "";
+}
+
+const BASE = apiBase();
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`);
@@ -22,6 +29,7 @@ export const api = {
   vehicles: () => get<Vehicle[]>("/api/vehicles"),
   alerts: () => get<Alert[]>("/api/alerts"),
   jobs: () => get<Job[]>("/api/jobs"),
+  geofences: () => get<Geofence[]>("/api/geofences"),
   zones: () => get<string[]>("/api/zones"),
   status: () => get<SimulationStatus>("/api/simulation/status"),
 

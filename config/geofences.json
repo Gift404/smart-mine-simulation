@@ -1,0 +1,56 @@
+{
+  "description": "Restricted geofences for Platreef-inspired layout. Unauthorized entry vibrates the wearable and raises system alerts.",
+  "default_radius_m": 35,
+  "fences": [
+    {
+      "fence_id": "GF-EMULSION",
+      "name": "Emulsion / explosives bay",
+      "node_ids": ["L750_EMULSION", "L850_EMULSION", "L950_EMULSION", "L1050_EMULSION"],
+      "zone_ids": [],
+      "radius_m": 40,
+      "severity": "CRITICAL",
+      "allowed_roles": ["Blaster"],
+      "message": "Restricted explosives bay - unauthorized entry"
+    },
+    {
+      "fence_id": "GF-OREPASS",
+      "name": "Ore-pass collar",
+      "node_ids": ["L750_OREPASS", "L850_OREPASS", "L950_OREPASS", "L1050_OREPASS"],
+      "zone_ids": ["ORE_PASS"],
+      "radius_m": 30,
+      "severity": "WARNING",
+      "allowed_roles": ["Supervisor", "Geologist", "Loader Operator"],
+      "message": "Restricted ore-pass area — fall / rock hazard"
+    },
+    {
+      "fence_id": "GF-CRUSHER",
+      "name": "950 m crushing station",
+      "node_ids": ["L950_CRUSHER", "L950_CONVEYOR"],
+      "zone_ids": [],
+      "radius_m": 35,
+      "severity": "WARNING",
+      "allowed_roles": ["Loader Operator", "Mechanic", "Electrician", "Supervisor"],
+      "message": "Restricted crushing / conveyor area"
+    },
+    {
+      "fence_id": "GF-DAM",
+      "name": "Dirty-water sump / dam",
+      "node_ids": ["L750_DAM", "L850_DAM", "L950_DAM", "L1050_DAM"],
+      "zone_ids": [],
+      "radius_m": 28,
+      "severity": "WARNING",
+      "allowed_roles": ["Electrician", "Mechanic", "Supervisor"],
+      "message": "Restricted sump / dam — flood hazard"
+    },
+    {
+      "fence_id": "GF-CONCENTRATOR",
+      "name": "Surface concentrator plant",
+      "node_ids": ["SURFACE_CONCENTRATOR"],
+      "zone_ids": [],
+      "radius_m": 50,
+      "severity": "WARNING",
+      "allowed_roles": ["Supervisor", "Electrician", "Mechanic"],
+      "message": "Restricted plant area — PPE / permit required"
+    }
+  ]
+}

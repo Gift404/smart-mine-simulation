@@ -26,7 +26,15 @@ export default function AlertFeed({ alerts }: { alerts: Record<string, Alert> })
               <span className="text-[10px] text-slate-500">{a.status}</span>
             </div>
             <div className="font-semibold text-slate-100">{minerLabel} — {a.description}</div>
-            <div className="text-xs text-slate-500">{a.location_zone_id ?? a.location_edge_id}</div>
+            <div className="text-xs text-slate-500">
+              {a.type.startsWith("RESTRICTED_ZONE") ? "GEOFENCE · " : ""}
+              {a.location_zone_id ?? a.location_edge_id}
+            </div>
+            {a.type.startsWith("RESTRICTED_ZONE") && a.status === "ACTIVE" && (
+              <div className="mt-0.5 animate-pulse text-[10px] font-semibold text-rose-400">
+                Wearable vibrating — leave restricted area
+              </div>
+            )}
             {a.status === "ACTIVE" && (
               <button
                 onClick={() => api.acknowledgeAlert(a.alert_id)}

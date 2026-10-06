@@ -2,12 +2,12 @@
  * True WebGL 3D mine map (Three.js + React Three Fiber).
  * Mine coords map 1:1: X east, Y elevation, Z north (Three.js Y-up).
  */
-import { Suspense, useMemo, useRef, useState, type MutableRefObject } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Suspense, useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Html } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
-import type { Alert, Gateway, MineEdge, MineGraph, MineNode, PositionEstimate, Telemetry, Vehicle, Worker } from "../types";
+import type { Alert, Gateway, Geofence, MineEdge, MineGraph, MineNode, PositionEstimate, Telemetry, Vehicle, Worker } from "../types";
 import { STATUS_COLOR, workerDisplayStatus } from "../services/status";
 import { HaulVehicleMesh, MiningFaceProps, ShaftCageStructure, WorkshopGear } from "./MineEquipment3D";
 
@@ -17,6 +17,7 @@ interface Props {
   vehicles: Record<string, Vehicle>;
   gateways: Record<string, Gateway>;
   alerts: Record<string, Alert>;
+  geofences?: Geofence[];
   telemetryByTag: Record<string, Telemetry>;
   positionByTag: Record<string, PositionEstimate>;
   selectedWorkerId: string | null;
@@ -27,29 +28,39 @@ interface Props {
   onStopTracking: () => void;
 }
 
-export type LevelFilter = "ALL" | "SURFACE" | "L1" | "L2" | "L3" | "L4";
+export type LevelFilter = "ALL" | "SURFACE" | "L750" | "L850" | "L950" | "L1050";
+/** How many floating Html labels appear in the 3D scene */
+export type LabelMode = "full" | "minimal" | "off";
 
 const LEVEL_COLORS: Record<string, string> = {
   SURFACE: "#64748b",
-  L1: "#7dd3fc",
-  L2: "#6ee7b7",
-  L3: "#fcd34d",
-  L4: "#f9a8d4",
+  L750: "#7dd3fc",
+  L850: "#6ee7b7",
+  L950: "#fcd34d",
+  L1050: "#f9a8d4",
 };
 
 /** Soft glass tints for tunnel meshes (muted vs UI accents). */
 const TUNNEL_GLASS: Record<string, string> = {
   SURFACE: "#94a3b8",
-  L1: "#94b8c9",
-  L2: "#8fb8a8",
-  L3: "#c4b896",
-  L4: "#c4a8b4",
+  L750: "#94b8c9",
+  L850: "#8fb8a8",
+  L950: "#c4b896",
+  L1050: "#c4a8b4",
 };
 
 const SHAFT_COLORS: Record<string, string> = {
+  S1_SHAFT: "#6b8cae",
+  S2_SHAFT: "#38bdf8",
+  S3_SHAFT: "#eab308",
+  S4_SHAFT: "#6b9e7a",
+  S5_SHAFT: "#6b9e7a",
   MAIN_SHAFT: "#6b8cae",
   VENT_SHAFT: "#6b9e7a",
   ESCAPE_SHAFT: "#b07a7a",
+  ACCESS_RAMP: "#a78bfa",
+  PROD_RAMP: "#c084fc",
+  ORE_PASS: "#b45309",
   DECLINE_RAMP: "#b8956e",
 };
 
@@ -75,9 +86,10 @@ const MAIN_SHAFT_RADIUS = 8.5;
 const SIDE_SHAFT_RADIUS = 6.5;
 
 function segmentRadius(e: MineEdge): number {
-  const isShaft = !!(e.kind && e.kind !== "tunnel");
-  if (!isShaft) return TUNNEL_RADIUS;
-  return e.zone_id === "MAIN_SHAFT" ? MAIN_SHAFT_RADIUS : SIDE_SHAFT_RADIUS;
+  if (!e.kind || e.kind === "tunnel") return TUNNEL_RADIUS;
+  if (e.kind === "ramp") return 6.2; // truck decline — wide roadway
+  if (e.kind === "ore_pass") return 4.0;
+  return e.zone_id === "S3_SHAFT" || e.zone_id === "MAIN_SHAFT" ? MAIN_SHAFT_RADIUS : SIDE_SHAFT_RADIUS;
 }
 
 function Segment({
@@ -157,13 +169,14 @@ function JunctionSphere({
 }
 
 function LevelPlane({
-  depth, color, label, opacity, size = 200,
+  depth, color, label, opacity, size = 480, showLabel = true,
 }: {
   depth: number;
   color: string;
   label: string;
   opacity: number;
   size?: number;
+  showLabel?: boolean;
 }) {
   if (opacity < 0.05) return null;
   return (
@@ -182,20 +195,22 @@ function LevelPlane({
         <ringGeometry args={[size * 0.98, size, 4]} />
         <meshBasicMaterial color={color} transparent opacity={0.25 * opacity} side={THREE.DoubleSide} />
       </mesh>
-      <Html position={[-size - 8, 2, 0]} center style={{ pointerEvents: "none" }}>
-        <div
-          style={{
-            color,
-            fontSize: 12,
-            fontWeight: 700,
-            whiteSpace: "nowrap",
-            textShadow: "0 0 6px #000",
-            opacity,
-          }}
-        >
-          {label}
-        </div>
-      </Html>
+      {showLabel && (
+        <Html position={[-size - 8, 2, 0]} center style={{ pointerEvents: "none" }}>
+          <div
+            style={{
+              color,
+              fontSize: 12,
+              fontWeight: 700,
+              whiteSpace: "nowrap",
+              textShadow: "0 0 6px #000",
+              opacity,
+            }}
+          >
+            {label}
+          </div>
+        </Html>
+      )}
     </group>
   );
 }
@@ -210,10 +225,16 @@ type RoomSpec = {
 
 const ROOM_SPECS: Record<string, RoomSpec> = {
   refuge: { color: "#4ade80", label: "Refuge chamber", w: 26, h: 14, d: 24 },
-  emergency: { color: "#f87171", label: "Emergency bay", w: 24, h: 14, d: 22 },
+  emergency: { color: "#f87171", label: "Services / dam / emulsion", w: 24, h: 14, d: 22 },
+  restricted: { color: "#fb7185", label: "RESTRICTED — authorized only", w: 26, h: 14, d: 24 },
   workshop: { color: "#fb923c", label: "Workshop", w: 28, h: 15, d: 26 },
-  work_zone: { color: "#a8a29e", label: "Mining face", w: 48, h: 20, d: 46 },
-  lift_station: { color: "#facc15", label: "Shaft station", w: 22, h: 18, d: 22 },
+  work_zone: { color: "#a8a29e", label: "Production stope", w: 48, h: 20, d: 46 },
+  lift_station: { color: "#facc15", label: "Shaft station", w: 24, h: 20, d: 24 },
+  tip: { color: "#d97706", label: "Truck tip → Shaft 3", w: 22, h: 14, d: 20 },
+  crusher: { color: "#78716c", label: "Crushing station", w: 30, h: 18, d: 28 },
+  conveyor: { color: "#57534e", label: "Conveyor to Shaft 3", w: 18, h: 10, d: 36 },
+  ore_pass: { color: "#92400e", label: "Ore-pass collar", w: 16, h: 14, d: 16 },
+  surface: { color: "#94a3b8", label: "Surface collar", w: 20, h: 8, d: 20 },
 };
 
 function isFacilityRoom(type: string | undefined): boolean {
@@ -265,12 +286,13 @@ function roomFeedDirection(
  * floor sits on the tunnel invert, full tube meets an open doorway at tunnel centreline.
  */
 function FacilityRoom({
-  node, opacity, nodeById, edges,
+  node, opacity, nodeById, edges, showLabel = true,
 }: {
   node: MineNode;
   opacity: number;
   nodeById: Record<string, MineNode>;
   edges: MineEdge[];
+  showLabel?: boolean;
 }) {
   const spec = ROOM_SPECS[node.type];
   if (!spec || opacity < 0.12) return null;
@@ -367,24 +389,26 @@ function FacilityRoom({
         <boxGeometry args={[0.5, doorH, 0.5]} />
         <meshStandardMaterial color={color} transparent opacity={0.4} emissive={color} emissiveIntensity={0.12} />
       </mesh>
-      <Html position={[0, roofY + 3.5, 0]} center style={{ pointerEvents: "none" }}>
-        <div
-          style={{
-            color,
-            fontSize: 10,
-            fontWeight: 700,
-            whiteSpace: "nowrap",
-            textShadow: "0 0 6px #000",
-            opacity: Math.min(1, opacity + 0.2),
-            background: "rgba(15,23,42,0.55)",
-            padding: "2px 6px",
-            borderRadius: 4,
-            border: `1px solid ${color}55`,
-          }}
-        >
-          {label}
-        </div>
-      </Html>
+      {showLabel && (
+        <Html position={[0, roofY + 3.5, 0]} center style={{ pointerEvents: "none" }}>
+          <div
+            style={{
+              color,
+              fontSize: 10,
+              fontWeight: 700,
+              whiteSpace: "nowrap",
+              textShadow: "0 0 6px #000",
+              opacity: Math.min(1, opacity + 0.2),
+              background: "rgba(15,23,42,0.55)",
+              padding: "2px 6px",
+              borderRadius: 4,
+              border: `1px solid ${color}55`,
+            }}
+          >
+            {label}
+          </div>
+        </Html>
+      )}
     </group>
   );
 }
@@ -467,6 +491,103 @@ function TrackingCamera({
   return null;
 }
 
+/** Smoothly fly the orbit camera to a level when the level filter changes. */
+function LevelFocusCamera({
+  levelFilter,
+  mine,
+  trackingId,
+  controlsRef,
+}: {
+  levelFilter: LevelFilter;
+  mine: MineGraph;
+  trackingId: string | null;
+  controlsRef: MutableRefObject<OrbitControlsImpl | null>;
+}) {
+  const goalRef = useRef<{
+    target: THREE.Vector3;
+    position: THREE.Vector3;
+    active: boolean;
+  } | null>(null);
+  const prevFilter = useRef<LevelFilter | null>(null);
+
+  useEffect(() => {
+    if (trackingId) return;
+    // Skip the initial mount so the Canvas camera seed stays put until the user picks a level
+    if (prevFilter.current === null) {
+      prevFilter.current = levelFilter;
+      return;
+    }
+    if (prevFilter.current === levelFilter) return;
+    prevFilter.current = levelFilter;
+
+    let tx = 80;
+    let ty = -900;
+    let tz = 40;
+    let dist = 1100;
+
+    if (levelFilter === "ALL") {
+      ty = -900;
+      dist = 1400;
+    } else if (levelFilter === "SURFACE") {
+      ty = 0;
+      dist = 900;
+    } else {
+      const nodes = mine.nodes.filter((n) => n.level_id === levelFilter);
+      if (nodes.length) {
+        tx = nodes.reduce((s, n) => s + n.x, 0) / nodes.length;
+        ty = nodes.reduce((s, n) => s + n.y, 0) / nodes.length;
+        tz = nodes.reduce((s, n) => s + (n.z ?? 0), 0) / nodes.length;
+      } else {
+        const lv = mine.levels?.find((l) => l.id === levelFilter);
+        ty = lv?.depth_m ?? ty;
+      }
+      // Close enough to read the haulage/stopes on that single level
+      dist = 420;
+    }
+
+    const target = new THREE.Vector3(tx, ty, tz);
+    // Elevated SE viewpoint so the level reads as a plan with depth cues
+    const position = new THREE.Vector3(tx + dist * 0.72, ty + dist * 0.38, tz + dist * 0.72);
+    goalRef.current = { target, position, active: true };
+  }, [levelFilter, mine, trackingId]);
+
+  useFrame((_, dt) => {
+    const goal = goalRef.current;
+    const controls = controlsRef.current;
+    if (!goal?.active || !controls || trackingId) return;
+
+    const t = 1 - Math.exp(-3.2 * dt);
+    controls.target.lerp(goal.target, t);
+    controls.object.position.lerp(goal.position, t);
+    controls.update();
+
+    if (
+      controls.target.distanceTo(goal.target) < 2 &&
+      controls.object.position.distanceTo(goal.position) < 4
+    ) {
+      goal.active = false;
+    }
+  });
+
+  return null;
+}
+
+/** Keep fog from eating the deep levels when the camera is close. */
+function AdaptiveFog() {
+  const { camera } = useThree();
+  const fogRef = useRef<THREE.Fog>(null);
+  useFrame(() => {
+    const fog = fogRef.current;
+    if (!fog) return;
+    // Deeper / closer views: push fog out so L1050 stays crisp
+    const depth = Math.abs(camera.position.y);
+    const near = Math.max(400, 700 + depth * 0.15);
+    fog.near = near;
+    fog.far = near + 4800;
+  });
+  return <fog ref={fogRef} attach="fog" args={["#070b14", 900, 5600]} />;
+}
+
 /** Mount pose: flat panel on tunnel wall, facing inward along the drive. */
 function gatewayMount(
   g: Gateway,
@@ -525,13 +646,14 @@ function gatewayMount(
 
 /** Quiet wall-mounted radio unit — not a glowing sphere in the drive. */
 function GatewayMarker({
-  gateway: g, opacity, focused, nodeById, edges,
+  gateway: g, opacity, focused, nodeById, edges, showLabel = true,
 }: {
   gateway: Gateway;
   opacity: number;
   focused: boolean;
   nodeById: Record<string, MineNode>;
   edges: MineEdge[];
+  showLabel?: boolean;
 }) {
   const { pos, yaw } = useMemo(
     () => gatewayMount(g, nodeById, edges),
@@ -583,7 +705,7 @@ function GatewayMarker({
         <boxGeometry args={[0.12, 0.9, 0.12]} />
         <meshStandardMaterial color={body} transparent opacity={op * 0.85} depthWrite={false} />
       </mesh>
-      {focused && (
+      {focused && showLabel && (
         <Html position={[0, 1.8, 0]} center style={{ pointerEvents: "none" }}>
           <div
             style={{
@@ -606,8 +728,61 @@ function GatewayMarker({
   );
 }
 
+/** Translucent restricted-zone cylinder at each geofenced node. */
+function GeofenceVolume({
+  x, y, z, radius, severity, opacity, label, showLabel,
+}: {
+  x: number; y: number; z: number; radius: number;
+  severity: string; opacity: number; label: string; showLabel: boolean;
+}) {
+  const color = severity === "CRITICAL" ? "#fb7185" : "#fbbf24";
+  if (opacity < 0.08) return null;
+  return (
+    <group position={[x, y, z]} raycast={() => null}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.3, 0]} raycast={() => null}>
+        <ringGeometry args={[radius * 0.92, radius, 48]} />
+        <meshBasicMaterial color={color} transparent opacity={0.45 * opacity} side={THREE.DoubleSide} depthWrite={false} />
+      </mesh>
+      <mesh position={[0, 6, 0]} raycast={() => null}>
+        <cylinderGeometry args={[radius, radius, 12, 32, 1, true]} />
+        <meshBasicMaterial color={color} transparent opacity={0.08 * opacity} side={THREE.DoubleSide} depthWrite={false} />
+      </mesh>
+      {showLabel && (
+        <Html position={[0, 14, 0]} center style={{ pointerEvents: "none" }}>
+          <div style={{
+            color, fontSize: 10, fontWeight: 800, whiteSpace: "nowrap",
+            textShadow: "0 0 6px #000", opacity: 0.9 * opacity,
+          }}>
+            RESTRICTED · {label}
+          </div>
+        </Html>
+      )}
+    </group>
+  );
+}
+
+/** Pulsing ring while the wearable is vibrating. */
+function WatchVibrateRing() {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    const m = ref.current;
+    if (!m) return;
+    const t = clock.getElapsedTime();
+    const s = 1.2 + Math.sin(t * 14) * 0.35;
+    m.scale.setScalar(s);
+    const mat = m.material as THREE.MeshBasicMaterial;
+    mat.opacity = 0.35 + 0.35 * Math.abs(Math.sin(t * 14));
+  });
+  return (
+    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.4, 0]} raycast={() => null}>
+      <ringGeometry args={[3.2, 4.4, 24]} />
+      <meshBasicMaterial color="#fb7185" transparent opacity={0.5} side={THREE.DoubleSide} depthWrite={false} />
+    </mesh>
+  );
+}
+
 function MineScene({
-  mine, workers, vehicles, gateways, alerts, levelFilter,
+  mine, workers, vehicles, gateways, alerts, geofences, levelFilter, labelMode,
   selectedWorkerId, trackingId, focusGatewayId,
   onSelectWorker, onStartTracking,
 }: {
@@ -616,7 +791,9 @@ function MineScene({
   vehicles: Record<string, Vehicle>;
   gateways: Record<string, Gateway>;
   alerts: Record<string, Alert>;
+  geofences: Geofence[];
   levelFilter: LevelFilter;
+  labelMode: LabelMode;
   selectedWorkerId: string | null;
   trackingId: string | null;
   focusGatewayId: string | null;
@@ -655,10 +832,10 @@ function MineScene({
     <>
       <color attach="background" args={["#070b14"]} />
       <ambientLight intensity={0.55} />
-      <directionalLight position={[120, 80, 60]} intensity={1.1} />
-      <directionalLight position={[-80, 40, -100]} intensity={0.35} />
+      <directionalLight position={[280, 120, 140]} intensity={1.1} />
+      <directionalLight position={[-180, 60, -220]} intensity={0.35} />
       <hemisphereLight args={["#94a3b8", "#0f172a", 0.4]} />
-      <fog attach="fog" args={["#070b14", 450, 1200]} />
+      <AdaptiveFog />
 
       {levels.map((lv) => (
         <LevelPlane
@@ -667,6 +844,7 @@ function MineScene({
           color={LEVEL_COLORS[lv.id] ?? "#64748b"}
           label={lv.label}
           opacity={opacityFor(lv.id, levelFilter)}
+          showLabel={labelMode === "full" || (labelMode === "minimal" && levelFilter === lv.id)}
         />
       ))}
 
@@ -674,18 +852,21 @@ function MineScene({
         const a = nodeById[e.start];
         const b = nodeById[e.end];
         if (!a || !b) return null;
-        const isShaft = !!(e.kind && e.kind !== "tunnel");
+        const isShaft = !!(e.kind && e.kind !== "tunnel" && e.kind !== "ramp");
+        const isRamp = e.kind === "ramp";
         const lv = edgeLevelId(e, nodeById);
-        const op = opacityFor(lv, levelFilter, isShaft);
+        const op = opacityFor(lv, levelFilter, isShaft || isRamp);
         if (op < 0.08) return null;
-        const color = isShaft
+        const color = isRamp
+          ? (SHAFT_COLORS[e.zone_id] ?? "#a78bfa")
+          : isShaft
           ? (SHAFT_COLORS[e.zone_id] ?? "#94a3b8")
           : (TUNNEL_GLASS[lv] ?? "#94a3b8");
-        const baseOpacity = isShaft ? 0.22 : 0.18;
+        const baseOpacity = isRamp ? 0.32 : isShaft ? 0.22 : 0.18;
         const r = segmentRadius(e);
         // Horizontal tunnels stop at the room doorway (not buried under/through the chamber)
-        const trimStart = !isShaft && isFacilityRoom(a.type) ? r * 0.15 : 0;
-        const trimEnd = !isShaft && isFacilityRoom(b.type) ? r * 0.15 : 0;
+        const trimStart = !isShaft && !isRamp && isFacilityRoom(a.type) ? r * 0.15 : 0;
+        const trimEnd = !isShaft && !isRamp && isFacilityRoom(b.type) ? r * 0.15 : 0;
         return (
           <Segment
             key={e.id}
@@ -725,6 +906,7 @@ function MineScene({
           nodeById={nodeById}
           edges={mine.edges}
           opacity={opacityFor(n.level_id ?? "UNKNOWN", levelFilter)}
+          showLabel={labelMode === "full"}
         />
       ))}
 
@@ -744,6 +926,7 @@ function MineScene({
           key={v.vehicle_id}
           vehicle={v}
           opacity={opacityFor(v.level ?? "UNKNOWN", levelFilter)}
+          showLabel={labelMode === "full"}
         />
       ))}
 
@@ -758,9 +941,26 @@ function MineScene({
             focused={focusGatewayId === g.gateway_id}
             nodeById={nodeById}
             edges={mine.edges}
+            showLabel={labelMode !== "off"}
           />
         );
       })}
+
+      {geofences.flatMap((f) =>
+        f.nodes.map((n) => (
+          <GeofenceVolume
+            key={`${f.fence_id}-${n.id}`}
+            x={n.x}
+            y={n.y}
+            z={n.z ?? 0}
+            radius={f.radius_m}
+            severity={f.severity}
+            opacity={opacityFor(n.level_id ?? "UNKNOWN", levelFilter)}
+            label={f.name}
+            showLabel={labelMode === "full" || (labelMode === "minimal" && levelFilter === (n.level_id as LevelFilter))}
+          />
+        )),
+      )}
 
       {Object.values(workers).map((w) => {
         const op = opacityFor(w.level ?? "UNKNOWN", levelFilter);
@@ -771,6 +971,7 @@ function MineScene({
         const tracking = w.worker_id === trackingId;
         const selected = w.worker_id === selectedWorkerId || tracking;
         const working = !!(w.activity && w.activity !== "Transit");
+        const vibrating = !!w.watch_vibrating;
         return (
           <group key={w.worker_id} position={[w.x, w.y, w.z ?? 0]}>
             <mesh
@@ -786,30 +987,36 @@ function MineScene({
             <mesh raycast={() => null}>
               <sphereGeometry args={[tracking ? 3.4 : selected ? 2.8 : 2.2, 14, 14]} />
               <meshStandardMaterial
-                color={tracking ? "#38bdf8" : STATUS_COLOR[status]}
-                emissive={tracking ? "#38bdf8" : STATUS_COLOR[status]}
-                emissiveIntensity={tracking ? 1.1 : selected ? 0.55 : working ? 0.35 : 0.2}
+                color={vibrating ? "#fb7185" : tracking ? "#38bdf8" : STATUS_COLOR[status]}
+                emissive={vibrating ? "#fb7185" : tracking ? "#38bdf8" : STATUS_COLOR[status]}
+                emissiveIntensity={vibrating ? 1.4 : tracking ? 1.1 : selected ? 0.55 : working ? 0.35 : 0.2}
                 transparent
                 opacity={Math.min(1, op + 0.15)}
                 depthWrite
               />
             </mesh>
+            {vibrating && <WatchVibrateRing />}
             {tracking && <TrackingBeacon />}
-            <Html distanceFactor={tracking ? 90 : 120} style={{ pointerEvents: "none" }}>
-              <div style={{
-                color: tracking ? "#7dd3fc" : "#e2e8f0",
-                fontSize: tracking ? 13 : 11,
-                fontWeight: 800,
-                textShadow: tracking ? "0 0 8px #0ea5e9, 0 0 4px #000" : "0 0 4px #000",
-                transform: "translate(10px, -10px)",
-                whiteSpace: "nowrap",
-              }}>
-                {tracking ? `▶ ${w.worker_id} TRACKING` : w.worker_id}
-                {working && (
-                  <div style={{ color: "#fcd34d", fontSize: 9, fontWeight: 600 }}>{w.activity}</div>
-                )}
-              </div>
-            </Html>
+            {(labelMode === "full" || (labelMode === "minimal" && (selected || tracking || vibrating))) && (
+              <Html distanceFactor={tracking ? 90 : 120} style={{ pointerEvents: "none" }}>
+                <div style={{
+                  color: vibrating ? "#fda4af" : tracking ? "#7dd3fc" : "#e2e8f0",
+                  fontSize: tracking ? 13 : 11,
+                  fontWeight: 800,
+                  textShadow: tracking ? "0 0 8px #0ea5e9, 0 0 4px #000" : "0 0 4px #000",
+                  transform: "translate(10px, -10px)",
+                  whiteSpace: "nowrap",
+                }}>
+                  {vibrating ? `${w.worker_id} · WATCH ALARM` : tracking ? `▶ ${w.worker_id} TRACKING` : w.worker_id}
+                  {labelMode === "full" && working && (
+                    <div style={{ color: "#fcd34d", fontSize: 9, fontWeight: 600 }}>{w.activity}</div>
+                  )}
+                  {vibrating && w.geofence_name && (
+                    <div style={{ color: "#fb7185", fontSize: 9, fontWeight: 700 }}>{w.geofence_name}</div>
+                  )}
+                </div>
+              </Html>
+            )}
           </group>
         );
       })}
@@ -819,11 +1026,12 @@ function MineScene({
 
 export default function MineMap3D(props: Props) {
   const {
-    mine, workers, vehicles, gateways, alerts, telemetryByTag, positionByTag,
+    mine, workers, vehicles, gateways, alerts, geofences = [], telemetryByTag, positionByTag,
     selectedWorkerId, trackingId, focusGatewayId = null,
     onSelectWorker, onStartTracking, onStopTracking,
   } = props;
   const [levelFilter, setLevelFilter] = useState<LevelFilter>("ALL");
+  const [labelMode, setLabelMode] = useState<LabelMode>("minimal");
   const controlsRef = useRef<OrbitControlsImpl | null>(null);
 
   if (!mine) {
@@ -860,6 +1068,30 @@ export default function MineMap3D(props: Props) {
             {lv.label}
           </button>
         ))}
+        <span className="ml-2 mr-1 text-[10px] uppercase tracking-wider text-slate-500">Labels</span>
+        {([
+          ["minimal", "Minimal"],
+          ["full", "Full"],
+          ["off", "Off"],
+        ] as const).map(([mode, text]) => (
+          <button
+            key={mode}
+            type="button"
+            onClick={() => setLabelMode(mode)}
+            className={`rounded px-2 py-1 text-[10px] font-semibold ${
+              labelMode === mode ? "bg-slate-600 text-white" : "bg-panel text-slate-400 hover:text-slate-200"
+            }`}
+            title={
+              mode === "full"
+                ? "All facility, miner, and vehicle labels"
+                : mode === "minimal"
+                  ? "Only selected/tracked miners and the active level name"
+                  : "No floating labels in the 3D view"
+            }
+          >
+            {text}
+          </button>
+        ))}
         {trackingId && workers[trackingId] && (
           <button
             type="button"
@@ -873,7 +1105,7 @@ export default function MineMap3D(props: Props) {
 
       <div className="relative min-h-0 flex-1 overflow-hidden rounded border border-border/60 bg-[#070b14]">
         <Canvas
-          camera={{ position: [280, 120, 280], fov: 42, near: 1, far: 3000 }}
+          camera={{ position: [980, -420, 980], fov: 40, near: 0.5, far: 14000 }}
           dpr={[1, 1.75]}
           onPointerMissed={() => {
             /* keep selection; only clear via card close */
@@ -886,7 +1118,9 @@ export default function MineMap3D(props: Props) {
               vehicles={vehicles}
               gateways={gateways}
               alerts={alerts}
+              geofences={geofences}
               levelFilter={levelFilter}
+              labelMode={labelMode}
               selectedWorkerId={selectedWorkerId}
               trackingId={trackingId}
               focusGatewayId={focusGatewayId}
@@ -894,14 +1128,25 @@ export default function MineMap3D(props: Props) {
               onStartTracking={onStartTracking}
             />
             <TrackingCamera trackingId={trackingId} workers={workers} controlsRef={controlsRef} />
+            <LevelFocusCamera
+              levelFilter={levelFilter}
+              mine={mine}
+              trackingId={trackingId}
+              controlsRef={controlsRef}
+            />
             <OrbitControls
               ref={controlsRef}
               makeDefault
-              target={[0, -250, 0]}
+              target={[80, -900, 40]}
               enableDamping
               dampingFactor={0.08}
-              minDistance={40}
-              maxDistance={900}
+              minDistance={12}
+              maxDistance={7000}
+              zoomSpeed={1.85}
+              panSpeed={1.35}
+              rotateSpeed={0.85}
+              minPolarAngle={0.05}
+              maxPolarAngle={Math.PI - 0.05}
             />
           </Suspense>
         </Canvas>
@@ -919,21 +1164,24 @@ export default function MineMap3D(props: Props) {
           />
         )}
 
-        <div className="pointer-events-none absolute bottom-2 left-2 rounded-md border border-border/50 bg-black/60 px-2.5 py-2 text-[10px] text-slate-300">
-          <div className="mb-1 font-semibold text-slate-200">3D controls · blueprint</div>
-          <div>Drag orbit · scroll zoom · click miner for status</div>
-          <div className="mt-1 grid grid-cols-2 gap-x-3 gap-y-0.5">
-            <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#6b8cae]" />Main shaft</span>
-            <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#6b9e7a]" />Ventilation</span>
-            <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#4ade80]/70" />Refuge</span>
-            <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#f87171]/70" />Emergency</span>
-            <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#fb923c]/70" />Workshop</span>
-            <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#a8a29e]/70" />Mining face</span>
-            <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#ca8a04]" />LHD / trailer</span>
-            <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#eab308]/70" />Shaft cage</span>
-            <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#facc15]/70" />Lift station</span>
+        {labelMode !== "off" && (
+          <div className="pointer-events-none absolute bottom-2 left-2 rounded-md border border-border/50 bg-black/60 px-2.5 py-2 text-[10px] text-slate-300">
+            <div className="mb-1 font-semibold text-slate-200">Platreef · Mokopane (inspired)</div>
+            <div>Drag orbit · scroll zoom · pan to dive · click a level to fly there</div>
+            {labelMode === "full" && (
+              <div className="mt-1 grid grid-cols-2 gap-x-3 gap-y-0.5">
+                <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#6b8cae]" />Shaft 1 access</span>
+                <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#eab308]" />Shaft 3 hoist</span>
+                <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#38bdf8]" />Shaft 2 P&amp;M</span>
+                <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#6b9e7a]" />Vent shafts</span>
+                <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#d97706]" />Truck tips</span>
+                <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#78716c]" />Crusher / conveyor</span>
+                <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#a78bfa]" />Spiral truck ramps</span>
+                <span><span className="mr-1 inline-block h-2 w-3 rounded-sm bg-[#b45309]" />Ore passes</span>
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
