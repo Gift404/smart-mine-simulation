@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useLive } from "../context/LiveDataContext";
+import { placeName } from "../services/labels";
 import type { Telemetry } from "../types";
 
 const RANGES = [
@@ -8,14 +9,6 @@ const RANGES = [
   { label: "30 min", seconds: 1800 },
   { label: "1 hour", seconds: 3600 },
 ];
-
-const ZONE_LABELS: Record<string, string> = {
-  VERT_WEST: "West vertical",
-  VERT_EAST: "East vertical",
-  HORIZ_NORTH: "North horizontal",
-  HORIZ_MID: "Mid horizontal",
-  HORIZ_SOUTH: "South horizontal",
-};
 
 type SeriesKey = "ch4" | "o2" | "hr" | "spo2" | "battery" | "minSpo2";
 
@@ -142,7 +135,7 @@ export default function AnalyticsPage() {
   const rangeLabel = RANGES.find((r) => r.seconds === rangeSeconds)?.label ?? "";
 
   return (
-    <div className="h-full overflow-y-auto p-4 sm:p-6">
+    <div className="page">
       <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="text-lg font-bold tracking-wide text-slate-100">Trends</h2>
@@ -151,7 +144,7 @@ export default function AnalyticsPage() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[10px] uppercase tracking-wider text-slate-500">Window</span>
+          <span className="text-[11px] uppercase tracking-wider text-slate-500">Window</span>
           <div className="flex gap-1 rounded-lg bg-panel2 p-1">
             {RANGES.map((r) => (
               <button
@@ -238,7 +231,7 @@ export default function AnalyticsPage() {
         <p className="mb-3 text-xs text-slate-500">Live snapshot — not a trend, a current reading per corridor</p>
         <div className="overflow-x-auto rounded-lg border border-border">
           <table className="w-full min-w-[720px] text-left text-sm">
-            <thead className="bg-panel2 text-[10px] uppercase tracking-wider text-slate-500">
+            <thead className="bg-panel2 text-[11px] uppercase tracking-wider text-slate-500">
               <tr>
                 <th className="px-3 py-2.5 font-semibold">Zone</th>
                 <th className="px-3 py-2.5 font-semibold">Miners</th>
@@ -254,10 +247,7 @@ export default function AnalyticsPage() {
               {zoneSnapshots.map((z) => (
                 <tr key={z.zoneId} className="border-t border-border/60 bg-panel hover:bg-panel2/80">
                   <td className="px-3 py-2.5">
-                    <div className="font-semibold text-slate-100">
-                      {ZONE_LABELS[z.zoneId] ?? z.zoneId}
-                    </div>
-                    <div className="font-mono text-[10px] text-slate-500">{z.zoneId}</div>
+                    <div className="font-semibold text-slate-100">{placeName(z.zoneId)}</div>
                   </td>
                   <td className="px-3 py-2.5 font-mono text-base text-slate-200">{z.miners}</td>
                   <td className={`px-3 py-2.5 font-mono text-base ${(z.avgCh4 ?? 0) >= 10 ? "text-status-warning" : "text-slate-200"}`}>
@@ -345,7 +335,7 @@ function Kpi({
 }) {
   return (
     <div className="rounded-lg border border-border bg-panel2 px-4 py-3">
-      <div className="text-[10px] uppercase tracking-wider text-slate-500">{label}</div>
+      <div className="text-[11px] uppercase tracking-wider text-slate-500">{label}</div>
       <div className={`mt-0.5 font-mono text-3xl font-bold ${accent ?? "text-slate-100"}`}>{value}</div>
       <div className="mt-1 text-xs text-slate-500">{hint}</div>
     </div>
@@ -464,7 +454,7 @@ function TrendChart({
 function StatChip({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded border border-border/60 bg-panel px-2.5 py-1.5">
-      <div className="text-[9px] uppercase tracking-wider text-slate-500">{label}</div>
+      <div className="text-[11px] uppercase tracking-wider text-slate-500">{label}</div>
       <div className="font-mono text-sm font-semibold text-slate-100">{value}</div>
     </div>
   );

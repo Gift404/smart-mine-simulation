@@ -1,0 +1,87 @@
+{
+  "description": "Restricted geofences for the Platreef schematic layout. Unauthorized entry vibrates the wearable and raises system alerts.",
+  "default_radius_m": 30,
+  "fences": [
+    {
+      "fence_id": "GF-MAGAZINE",
+      "name": "850 m explosives magazine",
+      "node_ids": [
+        "MAG850"
+      ],
+      "zone_ids": [],
+      "radius_m": 30,
+      "severity": "CRITICAL",
+      "allowed_roles": [
+        "Blaster"
+      ],
+      "message": "Restricted explosives magazine - unauthorized entry"
+    },
+    {
+      "fence_id": "GF-OREPASS",
+      "name": "Ore pass column",
+      "node_ids": [],
+      "zone_ids": [
+        "ORE_PASS"
+      ],
+      "radius_m": 20,
+      "severity": "WARNING",
+      "allowed_roles": [
+        "Supervisor",
+        "Geologist",
+        "Loader Operator"
+      ],
+      "message": "Restricted ore-pass column — fall / rock hazard"
+    },
+    {
+      "fence_id": "GF-CRUSHER",
+      "name": "Silos & crusher chamber",
+      "node_ids": [
+        "SILO",
+        "CRUSH"
+      ],
+      "zone_ids": [],
+      "radius_m": 30,
+      "severity": "WARNING",
+      "allowed_roles": [
+        "Loader Operator",
+        "Mechanic",
+        "Electrician",
+        "Supervisor"
+      ],
+      "message": "Restricted crushing / silo area"
+    },
+    {
+      "fence_id": "GF-PUMP",
+      "name": "996 m main pump station & sump",
+      "node_ids": [
+        "PUMP996"
+      ],
+      "zone_ids": [],
+      "radius_m": 25,
+      "severity": "WARNING",
+      "allowed_roles": [
+        "Electrician",
+        "Mechanic",
+        "Supervisor"
+      ],
+      "message": "Restricted pump station / sump — flood & electrical hazard"
+    },
+    {
+      "fence_id": "GF-SUBSTATION",
+      "name": "HV substations",
+      "node_ids": [
+        "SUB750",
+        "SUB950"
+      ],
+      "zone_ids": [],
+      "radius_m": 20,
+      "severity": "WARNING",
+      "allowed_roles": [
+        "Electrician",
+        "Mechanic",
+        "Supervisor"
+      ],
+      "message": "Restricted HV substation — authorized electrical staff only"
+    }
+  ]
+}

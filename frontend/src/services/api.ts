@@ -1,4 +1,6 @@
-import type { Worker, Gateway, Alert, Job, SimulationStatus, ScenarioName, MineGraph, MineSensor, Vehicle, Geofence } from "../types";
+import type {
+  Worker, Gateway, Alert, Job, SimulationStatus, ScenarioName, MineGraph, MineSensor, Vehicle, Geofence, SimulationInfo,
+} from "../types";
 
 function apiBase(): string {
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL as string;
@@ -32,6 +34,9 @@ export const api = {
   geofences: () => get<Geofence[]>("/api/geofences"),
   zones: () => get<string[]>("/api/zones"),
   status: () => get<SimulationStatus>("/api/simulation/status"),
+  simulations: () => get<SimulationInfo[]>("/api/simulations"),
+  activateSimulation: (simulationId: string) =>
+    post<{ simulation_id: string; running: boolean }>(`/api/simulations/${encodeURIComponent(simulationId)}/activate`),
 
   start: () => post("/api/simulation/start"),
   pause: () => post("/api/simulation/pause"),

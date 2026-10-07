@@ -71,7 +71,7 @@ class WorkerSimulator:
                 distance_along_edge_m=dist,
                 direction=self.rng.choice([1, -1]),
                 x=x, y=y, z=z,
-                level=mine.level_at_edge(edge_id) or mine.level_for_depth(y),
+                level=mine.level_at(edge_id, y),
                 walking_speed_mps=wcfg["walking_speed_mps"] * SPEED_SCALE,
                 behavior_profile=wcfg["behavior_profile"],
                 activity="Transit",
@@ -125,7 +125,7 @@ class WorkerSimulator:
                     remaining = 0
 
         w.x, w.y, w.z = self.mine.point_on_edge(w.current_edge_id, w.distance_along_edge_m)
-        w.level = self.mine.level_at_edge(w.current_edge_id) or self.mine.level_for_depth(w.y)
+        w.level = self.mine.level_at(w.current_edge_id, w.y)
         w.heading_deg = self.mine.heading_on_edge(w.current_edge_id, w.direction)
 
     def _try_start_work(self, w: Worker, node_id: str, sim_time_s: float) -> bool:

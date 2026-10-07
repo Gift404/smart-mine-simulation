@@ -2,13 +2,18 @@
 import { useNavigate } from "react-router-dom";
 import { useLive } from "../context/LiveDataContext";
 import { workerDisplayStatus, STATUS_COLOR } from "../services/status";
+import { vehicleKindLabel } from "./VehicleStatusCard";
 
-type Result =
-  | { kind: "miner"; id: string; title: string; subtitle: string }
-  | { kind: "gateway"; id: string; title: string; subtitle: string };
+type Result = { kind: "miner" | "vehicle" | "gateway"; id: string; title: string; subtitle: string };
+
+const BADGE: Record<Result["kind"], { label: string; className: string }> = {
+  miner: { label: "Miner", className: "bg-emerald-500/20 text-emerald-300" },
+  vehicle: { label: "Vehicle", className: "bg-amber-500/20 text-amber-300" },
+  gateway: { label: "GW", className: "bg-blue-500/20 text-blue-300" },
+};
 
 export default function GlobalSearch() {
-  const { state, startTracking, stopTracking } = useLive();
+  const { state, startTracking, startTrackingVehicle, stopTracking } = useLive();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -38,6 +43,23 @@ export default function GlobalSearch() {
         };
       });
 
+    const vehicles: Result[] = Object.values(state.vehicles)
+      .filter((v) => {
+        const hay = [v.vehicle_id, v.name, v.kind, vehicleKindLabel(v), v.driver_worker_id, v.driver_name, "truck"]
+          .join(" ")
+          .toLowerCase();
+        return hay.includes(q);
+      })
+      .sort((a, b) => a.vehicle_id.localeCompare(b.vehicle_id))
+      .slice(0, 8)
+      .map((v) => ({
+        kind: "vehicle" as const,
+        id: v.vehicle_id,
+        title: v.vehicle_id + (v.name && v.name !== v.vehicle_id ? " · " + v.name : ""),
+        subtitle:
+          vehicleKindLabel(v) + " · " + (v.driver_name ?? "no driver") + " · " + (v.level ?? "in transit") + " · " + (v.activity ?? v.phase),
+      }));
+
     const gateways: Result[] = Object.values(state.gateways)
       .filter((g) => {
         const hay = [g.gateway_id, g.zone_id, g.status].join(" ").toLowerCase();
@@ -52,8 +74,8 @@ export default function GlobalSearch() {
         subtitle: g.zone_id + " · " + g.status,
       }));
 
-    return [...miners, ...gateways];
-  }, [query, state.workers, state.gateways, state.alerts, state.positionByTag]);
+    return [...miners, ...vehicles, ...gateways];
+  }, [query, state.workers, state.vehicles, state.gateways, state.alerts, state.positionByTag]);
 
   useEffect(() => {
     setActiveIdx(0);
@@ -73,6 +95,9 @@ export default function GlobalSearch() {
     if (r.kind === "miner") {
       startTracking(r.id);
       navigate("/?track=" + encodeURIComponent(r.id));
+    } else if (r.kind === "vehicle") {
+      startTrackingVehicle(r.id);
+      navigate("/?vehicle=" + encodeURIComponent(r.id));
     } else {
       stopTracking();
       navigate("/?gateway=" + encodeURIComponent(r.id));
@@ -105,14 +130,14 @@ export default function GlobalSearch() {
   return (
     <div ref={rootRef} className="relative w-full">
       <label className="sr-only" htmlFor="global-search">
-        Search miners or gateways
+        Search miners, vehicles or gateways
       </label>
       <input
         id="global-search"
         ref={inputRef}
         type="search"
         value={query}
-        placeholder="Search miner or gateway…"
+        placeholder="Search miner, vehicle or gateway…"
         autoComplete="off"
         onChange={(e) => {
           setQuery(e.target.value);
@@ -145,12 +170,10 @@ export default function GlobalSearch() {
                       <span
                         className={
                           "mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider " +
-                          (r.kind === "miner"
-                            ? "bg-emerald-500/20 text-emerald-300"
-                            : "bg-blue-500/20 text-blue-300")
+                          BADGE[r.kind].className
                         }
                       >
-                        {r.kind === "miner" ? "Miner" : "GW"}
+                        {BADGE[r.kind].label}
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center gap-2">

@@ -29,6 +29,10 @@ def vehicle_position_topic(vehicle_id: str) -> str:
     return f"{SECTION}/vehicle/{vehicle_id}/position"
 
 
+def simulation_topic() -> str:
+    return f"{SECTION}/simulation/active"
+
+
 TELEMETRY_WILDCARD = f"{SECTION}/wearable/+/telemetry"
 COMMAND_WILDCARD = f"{SECTION}/wearable/+/command"
 GATEWAY_WILDCARD = f"{SECTION}/gateway/+/status"

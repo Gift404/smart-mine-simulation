@@ -1,13 +1,18 @@
 from __future__ import annotations
 import asyncio
 import os
+import threading
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.logging_config import setup_logging, get_logger
-from app.config import MQTT_HOST, MQTT_PORT, INFLUX_URL, INFLUX_TOKEN, INFLUX_ORG, INFLUX_BUCKET, SIM_TICK_HZ
+from app.config import (
+    MQTT_HOST, MQTT_PORT, INFLUX_URL, INFLUX_TOKEN, INFLUX_ORG, INFLUX_BUCKET, SIM_TICK_HZ,
+    SIMULATIONS, DEFAULT_SIMULATION_ID,
+)
+from app.mqtt import topics
 from app.simulator.simulation_engine import SimulationEngine
 from app.websocket.manager import WebSocketManager
 from app.database.influx import InfluxWriter
@@ -53,7 +58,14 @@ def publish(topic: str, payload: dict) -> None:
         influx.write_measurement("position", {"tag_id": payload.get("tag_id", "")}, payload, payload.get("ts", 0))
 
 
-engine = SimulationEngine(publish=publish)
+engine = SimulationEngine(publish=publish, simulation=SIMULATIONS[DEFAULT_SIMULATION_ID])
+# Ticks run in a worker thread; swapping or resetting the engine must not interleave with one
+_engine_lock = threading.Lock()
+
+
+def _tick_locked(dt: float) -> None:
+    with _engine_lock:
+        engine.tick(dt)
 
 
 @asynccontextmanager
@@ -85,7 +97,7 @@ async def _simulation_loop():
     dt = 1.0 / SIM_TICK_HZ
     while True:
         # Offload sync tick so HTTP/WebSocket stay responsive under load
-        await asyncio.to_thread(engine.tick, dt)
+        await asyncio.to_thread(_tick_locked, dt)
         await asyncio.sleep(dt)
 
 
@@ -110,6 +122,7 @@ def get_worker(worker_id: str):
 @app.get("/api/mine")
 def get_mine():
     return {
+        "simulation_id": engine.simulation.id,
         "name": engine.mine.name,
         "coordinate_system": engine.mine.coordinate_system,
         "levels": [lv.__dict__ for lv in engine.mine.levels],
@@ -117,7 +130,37 @@ def get_mine():
         "edges": [e.__dict__ for e in engine.mine.edges.values()],
         "zones": engine.list_zones(),
         "portals": [p.__dict__ for p in engine.mine.portals],
+        "stopes": engine.mine.stopes,
+        "stope_size_m": engine.mine.stope_size_m,
+        "view": engine.mine.view,
     }
+
+
+@app.get("/api/simulations")
+def list_simulations():
+    return [
+        {"id": s.id, "name": s.name, "description": s.description, "active": s.id == engine.simulation.id}
+        for s in SIMULATIONS.values()
+    ]
+
+
+@app.post("/api/simulations/{simulation_id}/activate")
+def activate_simulation(simulation_id: str):
+    """Swap the running engine for another simulation; run state and speed carry over."""
+    global engine
+    sim = SIMULATIONS.get(simulation_id)
+    if sim is None:
+        return {"error": f"unknown simulation: {simulation_id}"}
+    if engine.simulation.id != simulation_id:
+        replacement = SimulationEngine(publish=publish, simulation=sim)
+        with _engine_lock:
+            replacement.speed_multiplier = engine.speed_multiplier
+            if engine.running:
+                replacement.start(seed_demo=False)
+            engine = replacement
+        logger.info("switched simulation to %s", simulation_id)
+    publish(topics.simulation_topic(), {"simulation_id": simulation_id})
+    return {"simulation_id": simulation_id, "running": engine.running}
 
 
 @app.get("/api/zones")
@@ -164,6 +207,7 @@ def list_jobs():
 @app.get("/api/simulation/status")
 def simulation_status():
     return {
+        "simulation_id": engine.simulation.id,
         "running": engine.running,
         "sim_time_s": engine.sim_time_s,
         "speed_multiplier": engine.speed_multiplier,
@@ -191,7 +235,8 @@ def simulation_pause():
 
 @app.post("/api/simulation/reset")
 def simulation_reset():
-    engine.reset()
+    with _engine_lock:
+        engine.reset()
     return {"reset": True}
 
 

@@ -2,19 +2,13 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLive } from "../context/LiveDataContext";
 import { api } from "../services/api";
+import { placeName } from "../services/labels";
+import EmptyState from "../components/EmptyState";
 import type { Gateway, MineSensor, SensorStatus, SensorType } from "../types";
 
 type Tab = "overview" | "gateways" | "sensors";
 type GwFilter = "ALL" | "OK" | "PROBLEM";
 type SensorFilter = "ALL" | "OK" | "PROBLEM" | SensorType;
-
-const ZONE_LABEL: Record<string, string> = {
-  VERT_WEST: "West vertical",
-  VERT_EAST: "East vertical",
-  HORIZ_NORTH: "North drift",
-  HORIZ_MID: "Mid drift",
-  HORIZ_SOUTH: "South drift",
-};
 
 const TYPE_LABEL: Record<SensorType, string> = {
   CH4: "Methane monitor",
@@ -25,9 +19,7 @@ const TYPE_LABEL: Record<SensorType, string> = {
 
 type Condition = "Good" | "Degraded" | "Offline" | "Fault" | "Backhaul down";
 
-function zoneName(zoneId: string) {
-  return ZONE_LABEL[zoneId] ?? zoneId.replace(/_/g, " ").toLowerCase();
-}
+const zoneName = placeName;
 
 function gatewayName(g: Gateway) {
   return `${zoneName(g.zone_id)} · ${g.gateway_id}`;
@@ -35,8 +27,25 @@ function gatewayName(g: Gateway) {
 
 function sensorName(s: MineSensor) {
   const base = TYPE_LABEL[s.sensor_type] ?? s.sensor_type;
-  const hub = s.linked_gateway_id ? ` near ${s.linked_gateway_id}` : "";
-  return `${base} · ${zoneName(s.zone_id)}${hub}`;
+  return `${base} · ${zoneName(s.zone_id)}`;
+}
+
+function gatewayReason(g: Gateway): string {
+  if (g.status === "OFFLINE") return "Gateway offline — no tag coverage here";
+  if (g.backhaul_primary === "OFFLINE") {
+    return g.backhaul_fallback === "ONLINE" ? "Primary link down — running on fallback" : "Both backhaul links down";
+  }
+  return zoneName(g.zone_id);
+}
+
+function sensorReason(s: MineSensor): string {
+  if (s.status === "FAULT") return "Reported a fault — readings not trusted";
+  if (s.status === "OFFLINE") return "Not reporting";
+  const reasons: string[] = [];
+  if (s.battery_pct < 20) reasons.push(`Battery low (${s.battery_pct.toFixed(0)}%)`);
+  if (s.maintenance_due_days <= 45) reasons.push(`Service due in ${s.maintenance_due_days} days`);
+  if (s.status === "DEGRADED" && reasons.length === 0) reasons.push("Gateway link unreliable");
+  return reasons.length ? reasons.join(" · ") : zoneName(s.zone_id);
 }
 
 function gatewayCondition(g: Gateway): Condition {
@@ -121,7 +130,7 @@ export default function SystemsPage() {
   };
 
   return (
-    <div className="h-full overflow-y-auto p-4 sm:p-6">
+    <div className="page">
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="text-lg font-bold tracking-wide text-slate-100">Systems &amp; devices</h2>
@@ -158,10 +167,10 @@ export default function SystemsPage() {
             <Kpi label="Sensors problem" value={String(sensProblems.length)} ok={sensProblems.length === 0} invert />
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="space-y-4">
             <NamedGroup
               title="Needs attention"
-              empty="All devices look healthy."
+              empty="All devices look healthy — nothing needs work right now."
               tone="warn"
             >
               {[
@@ -172,7 +181,8 @@ export default function SystemsPage() {
                     name: gatewayName(g),
                     id: g.gateway_id,
                     condition: gatewayCondition(g),
-                    detail: zoneName(g.zone_id),
+                    detail: gatewayReason(g),
+                    warn: true,
                     href: `/?gateway=${g.gateway_id}`,
                   })),
                 ...sensProblems
@@ -182,7 +192,9 @@ export default function SystemsPage() {
                     name: sensorName(s),
                     id: s.sensor_id,
                     condition: sensorCondition(s),
-                    detail: s.linked_gateway_id ? `via ${s.linked_gateway_id}` : zoneName(s.zone_id),
+                    detail: sensorReason(s),
+                    warn: true,
+                    href: s.linked_gateway_id ? `/?gateway=${s.linked_gateway_id}` : undefined,
                   })),
               ].map(({ key, ...row }) => (
                 <DeviceRow key={key} {...row} />
@@ -208,7 +220,8 @@ export default function SystemsPage() {
                     name: sensorName(s),
                     id: s.sensor_id,
                     condition: "Good" as Condition,
-                    detail: zoneName(s.zone_id),
+                    detail: `Service due in ${s.maintenance_due_days} days`,
+                    href: s.linked_gateway_id ? `/?gateway=${s.linked_gateway_id}` : undefined,
                   })),
               ].map(({ key, ...row }) => (
                 <DeviceRow key={key} {...row} />
@@ -238,9 +251,10 @@ export default function SystemsPage() {
                   <div className="flex flex-wrap items-center gap-3 px-3 py-3 sm:px-4">
                     <div className="min-w-0 flex-1">
                       <div className="truncate font-semibold text-slate-100">{gatewayName(g)}</div>
+                      {condition !== "Good" && (
+                        <div className="mt-0.5 text-sm text-status-warning">{gatewayReason(g)}</div>
+                      )}
                       <div className="mt-0.5 flex flex-wrap gap-x-3 text-xs text-slate-500">
-                        <span className="font-mono">{g.gateway_id}</span>
-                        <span>{zoneName(g.zone_id)}</span>
                         <span>
                           Primary{" "}
                           <span className={primaryDown ? "text-status-critical" : "text-status-normal"}>
@@ -259,7 +273,7 @@ export default function SystemsPage() {
                     <div className="flex flex-wrap gap-1.5">
                       <Link
                         to={`/?gateway=${g.gateway_id}`}
-                        className="rounded bg-panel px-2 py-1 text-[10px] font-semibold text-sky-300 hover:text-sky-200"
+                        className="btn btn-sm btn-primary"
                       >
                         Map
                       </Link>
@@ -271,7 +285,7 @@ export default function SystemsPage() {
                             api.setBackhaulFailure(g.gateway_id, g.backhaul_primary === "ONLINE"),
                           )
                         }
-                        className="rounded bg-panel px-2 py-1 text-[10px] font-semibold text-slate-300 hover:text-white disabled:opacity-50"
+                        className="btn btn-sm btn-ghost"
                       >
                         {primaryDown ? "Restore primary" : "Fail primary"}
                       </button>
@@ -283,7 +297,7 @@ export default function SystemsPage() {
                             api.setGatewayOffline(g.gateway_id, g.status === "ONLINE"),
                           )
                         }
-                        className="rounded bg-panel px-2 py-1 text-[10px] font-semibold text-slate-300 hover:text-white disabled:opacity-50"
+                        className="btn btn-sm btn-ghost"
                       >
                         {g.status === "ONLINE" ? "Take offline" : "Bring online"}
                       </button>
@@ -293,7 +307,12 @@ export default function SystemsPage() {
               );
             })}
           </DeviceList>
-          {gateways.length === 0 && <EmptyState text="No gateways match this filter." />}
+          {gateways.length === 0 && (
+            <EmptyState
+              tone={gwFilter === "PROBLEM" ? "ok" : "neutral"}
+              title={gwFilter === "PROBLEM" ? "No gateway problems" : "No gateways match this filter"}
+            />
+          )}
         </div>
       )}
 
@@ -320,6 +339,9 @@ export default function SystemsPage() {
                   <div className="flex flex-wrap items-center gap-3 px-3 py-3 sm:px-4">
                     <div className="min-w-0 flex-1">
                       <div className="truncate font-semibold text-slate-100">{sensorName(s)}</div>
+                      {condition !== "Good" && (
+                        <div className="mt-0.5 text-sm text-status-warning">{sensorReason(s)}</div>
+                      )}
                       <div className="mt-0.5 flex flex-wrap gap-x-3 text-xs text-slate-500">
                         <span className="font-mono">{s.sensor_id}</span>
                         <span>
@@ -327,7 +349,7 @@ export default function SystemsPage() {
                         </span>
                         <span>Battery {s.battery_pct.toFixed(0)}%</span>
                         <span className={s.maintenance_due_days <= 45 ? "text-status-warning" : undefined}>
-                          Maint. {s.maintenance_due_days}d
+                          Service in {s.maintenance_due_days} days
                         </span>
                         {s.linked_gateway_id && (
                           <Link className="text-sky-300 hover:underline" to={`/?gateway=${s.linked_gateway_id}`}>
@@ -346,7 +368,7 @@ export default function SystemsPage() {
                             api.setSensorOffline(s.sensor_id, s.status !== "OFFLINE"),
                           )
                         }
-                        className="rounded bg-panel px-2 py-1 text-[10px] font-semibold text-slate-300 hover:text-white disabled:opacity-50"
+                        className="btn btn-sm btn-ghost"
                       >
                         {s.status === "OFFLINE" ? "Bring online" : "Take offline"}
                       </button>
@@ -358,7 +380,7 @@ export default function SystemsPage() {
                             api.setSensorFault(s.sensor_id, s.status !== "FAULT"),
                           )
                         }
-                        className="rounded bg-panel px-2 py-1 text-[10px] font-semibold text-slate-300 hover:text-white disabled:opacity-50"
+                        className="btn btn-sm btn-ghost"
                       >
                         {s.status === "FAULT" ? "Clear fault" : "Mark fault"}
                       </button>
@@ -368,7 +390,12 @@ export default function SystemsPage() {
               );
             })}
           </DeviceList>
-          {sensors.length === 0 && <EmptyState text="No sensors match this filter." />}
+          {sensors.length === 0 && (
+            <EmptyState
+              tone={sensorFilter === "PROBLEM" ? "ok" : "neutral"}
+              title={sensorFilter === "PROBLEM" ? "No sensor problems" : "No sensors match this filter"}
+            />
+          )}
         </div>
       )}
     </div>
@@ -383,7 +410,7 @@ function Kpi({
   const warn = invert ? !ok : !ok;
   return (
     <div className="rounded-lg border border-border bg-panel2 px-4 py-3">
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">{label}</div>
+      <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">{label}</div>
       <div className={`mt-1 text-2xl font-bold tabular-nums ${warn ? "text-status-warning" : "text-slate-100"}`}>
         {value}
       </div>
@@ -409,36 +436,40 @@ function NamedGroup({
         <span className="ml-2 font-mono text-xs font-normal text-slate-500">({count})</span>
       </div>
       {count === 0 ? (
-        <div className="px-4 py-6 text-sm text-slate-500">{empty}</div>
+        <div className={`px-4 py-4 text-sm ${tone === "warn" ? "text-status-normal" : "text-slate-500"}`}>
+          {tone === "warn" && <span className="mr-2" aria-hidden>✓</span>}
+          {empty}
+        </div>
       ) : (
-        <ul className="max-h-[28rem] divide-y divide-border/40 overflow-y-auto">{children}</ul>
+        <ul className="grid gap-px bg-border/40 sm:grid-cols-2 xl:grid-cols-3">{children}</ul>
       )}
     </section>
   );
 }
 
 function DeviceRow({
-  name, id, condition, detail, href,
+  name, id, condition, detail, href, warn = false,
 }: {
   name: string;
   id: string;
   condition: Condition;
   detail: string;
   href?: string;
+  warn?: boolean;
 }) {
   return (
-    <li className="flex items-center gap-3 px-4 py-2.5">
+    <li className="flex items-center gap-3 bg-panel2 px-4 py-2.5">
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm font-semibold text-slate-100">{name}</div>
         <div className="truncate text-xs text-slate-500">
           <span className="font-mono">{id}</span>
           <span className="mx-1.5 text-slate-600">·</span>
-          {detail}
+          <span className={warn ? "text-status-warning" : undefined}>{detail}</span>
         </div>
       </div>
       <ConditionBadge condition={condition} />
       {href && (
-        <Link to={href} className="shrink-0 text-[10px] font-semibold text-sky-300 hover:text-sky-200">
+        <Link to={href} className="btn btn-sm btn-primary shrink-0">
           Map
         </Link>
       )}
@@ -448,7 +479,7 @@ function DeviceRow({
 
 function ConditionBadge({ condition }: { condition: Condition }) {
   return (
-    <span className={`shrink-0 rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${CONDITION_STYLE[condition]}`}>
+    <span className={`shrink-0 rounded px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide ${CONDITION_STYLE[condition]}`}>
       {condition}
     </span>
   );
@@ -468,9 +499,7 @@ function FilterPills<T extends string>({
           key={id}
           type="button"
           onClick={() => onChange(id)}
-          className={`rounded px-2.5 py-1 text-xs font-semibold tracking-wide ${
-            value === id ? "bg-slate-600 text-slate-100" : "bg-panel2 text-slate-400 hover:text-slate-200"
-          }`}
+          className={`chip ${value === id ? "chip-on" : "chip-off"}`}
         >
           {label}
         </button>
@@ -484,11 +513,5 @@ function DeviceList({ children }: { children: React.ReactNode }) {
     <ul className="overflow-hidden rounded-lg border border-border bg-panel2">
       {children}
     </ul>
-  );
-}
-
-function EmptyState({ text }: { text: string }) {
-  return (
-    <div className="rounded-lg border border-border bg-panel2 p-8 text-center text-slate-500">{text}</div>
   );
 }

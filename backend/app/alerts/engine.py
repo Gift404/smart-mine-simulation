@@ -15,6 +15,20 @@ class AlertEngine:
         self.active_alerts: dict[str, Alert] = {}  # keyed by f"{worker_id}:{type}"
         self.all_alerts: dict[str, Alert] = {}      # keyed by alert_id
         self.last_seen_sim_ts: dict[str, float] = {}
+        # Alerts whose status changed without a publish (auto-resolve) — the engine drains and broadcasts these
+        self._changed: list[Alert] = []
+
+    def drain_changed(self) -> list[Alert]:
+        changed, self._changed = self._changed, []
+        return changed
+
+    def mark_resolved(self, key: str, sim_ts: float) -> Alert | None:
+        alert = self.active_alerts.pop(key, None)
+        if alert and alert.status != AlertStatus.RESOLVED:
+            alert.status = AlertStatus.RESOLVED
+            alert.resolved_sim_ts = sim_ts
+            self._changed.append(alert)
+        return alert
 
     def evaluate(self, telemetry: Telemetry, worker_id: str, edge_id: str, zone_id: str, sim_ts: float) -> list[Alert]:
         self.last_seen_sim_ts[telemetry.tag_id] = sim_ts
@@ -123,7 +137,5 @@ class AlertEngine:
         key = f"{worker_id}:{alert_type}"
         alert = self.active_alerts.get(key)
         if alert and cleared and alert.status != AlertStatus.RESOLVED:
-            alert.status = AlertStatus.RESOLVED
-            alert.resolved_sim_ts = sim_ts
-            del self.active_alerts[key]
+            self.mark_resolved(key, sim_ts)
             log.info("%s RESOLVED worker=%s type=%s", alert.alert_id, worker_id, alert_type)

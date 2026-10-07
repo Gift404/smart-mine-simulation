@@ -224,8 +224,8 @@ export function ShaftCageStructure({
       ))}
       {/* Cage / skip car */}
       <mesh position={[0, isSurface ? 4 : 3, 0]}>
-        <boxGeometry args={[4.2, 5.5, 4.2]} />
-        <meshStandardMaterial color="#eab308" metalness={0.35} roughness={0.45} transparent opacity={0.85} />
+        <boxGeometry args={[3.2, 4.2, 3.2]} />
+        <meshStandardMaterial color="#a8915a" metalness={0.35} roughness={0.45} transparent opacity={0.7} />
       </mesh>
       {isSurface && (
         <>

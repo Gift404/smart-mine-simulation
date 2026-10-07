@@ -1,0 +1,84 @@
+{
+  "vehicles": [
+    {
+      "vehicle_id": "LHD-01",
+      "name": "LHD 14t · 850 ore drive",
+      "kind": "lhd",
+      "driver_worker_id": "W05",
+      "start_edge": "DR_OD8C_OD8S1",
+      "speed_mps": 3.2,
+      "load_node_ids": [
+        "OD8N1",
+        "OD8S1",
+        "OD8S2",
+        "OD8S3"
+      ],
+      "dump_node_ids": [
+        "OD8C"
+      ]
+    },
+    {
+      "vehicle_id": "LHD-02",
+      "name": "LHD 18t · 950 strike drives",
+      "kind": "lhd",
+      "driver_worker_id": "W14",
+      "start_edge": "DR_H1103_H3S1",
+      "speed_mps": 3.0,
+      "load_node_ids": [
+        "H3N1",
+        "H3N2",
+        "H3S1",
+        "H3S2"
+      ],
+      "dump_node_ids": [
+        "H1103"
+      ]
+    },
+    {
+      "vehicle_id": "TRK-01",
+      "name": "54t Truck · 950 haulage → silos",
+      "kind": "ore_trailer",
+      "driver_worker_id": "W03",
+      "start_edge": "DR_H391-H7002_H391-H7003",
+      "speed_mps": 2.8,
+      "load_node_ids": [
+        "H1103",
+        "H391",
+        "H250"
+      ],
+      "dump_node_ids": [
+        "SILO"
+      ]
+    },
+    {
+      "vehicle_id": "TRK-02",
+      "name": "42t Truck · ore-pass feeder",
+      "kind": "ore_trailer",
+      "driver_worker_id": null,
+      "start_edge": "DR_H100_H100-H2501",
+      "speed_mps": 2.5,
+      "load_node_ids": [
+        "H391",
+        "H250"
+      ],
+      "dump_node_ids": [
+        "SILO",
+        "CRUSH"
+      ]
+    },
+    {
+      "vehicle_id": "TRK-03",
+      "name": "30t Truck · 750 development muck",
+      "kind": "ore_trailer",
+      "driver_worker_id": null,
+      "start_edge": "DR_OP2T_OP2T-ER11",
+      "speed_mps": 2.4,
+      "load_node_ids": [
+        "ER1"
+      ],
+      "dump_node_ids": [
+        "OP2T"
+      ]
+    }
+  ]
+}

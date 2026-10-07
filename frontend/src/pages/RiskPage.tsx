@@ -7,6 +7,7 @@ import {
   type RiskLevel,
   type ZoneRisk,
 } from "../services/riskEngine";
+import { placeName } from "../services/labels";
 
 const LEVEL_GUIDE: { level: RiskLevel; meaning: string }[] = [
   { level: "LOW", meaning: "Safe to operate — keep monitoring" },
@@ -15,18 +16,7 @@ const LEVEL_GUIDE: { level: RiskLevel; meaning: string }[] = [
   { level: "CRITICAL", meaning: "Emergency — evacuate / respond immediately" },
 ];
 
-const ZONE_LABELS: Record<string, string> = {
-  VERT_WEST: "West vertical",
-  VERT_EAST: "East vertical",
-  HORIZ_NORTH: "North horizontal",
-  HORIZ_MID: "Mid horizontal",
-  HORIZ_SOUTH: "South horizontal",
-  MINE: "Whole mine",
-};
-
-function zoneName(id: string) {
-  return ZONE_LABELS[id] ?? id.replace(/_/g, " ");
-}
+const zoneName = placeName;
 
 export default function RiskPage() {
   const { state, zones } = useLive();
@@ -58,11 +48,23 @@ export default function RiskPage() {
     ? report.zones.find((z) => z.zoneId === selectedZone) ?? report.overall
     : report.overall;
 
-  const hotZones = report.zones.filter((z) => z.level === "HIGH" || z.level === "CRITICAL");
+  const rankedZones = useMemo(
+    () =>
+      [...report.zones].sort(
+        (a, b) =>
+          b.score - a.score ||
+          b.activeAlerts - a.activeAlerts ||
+          b.minerCount - a.minerCount ||
+          zoneName(a.zoneId).localeCompare(zoneName(b.zoneId)),
+      ),
+    [report.zones],
+  );
+  const knownZones = useMemo(() => new Set(report.zones.map((z) => z.zoneId)), [report.zones]);
+  const hotZones = rankedZones.filter((z) => z.level === "HIGH" || z.level === "CRITICAL");
   const verdict = verdictLine(report.overall, hotZones);
 
   return (
-    <div className="h-full overflow-y-auto p-4 sm:p-6">
+    <div className="page">
       <div className="mb-5">
         <h2 className="text-lg font-bold tracking-wide text-slate-100">Risk Engine</h2>
         <p className="text-sm text-slate-500">
@@ -80,7 +82,7 @@ export default function RiskPage() {
       >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
-            <div className="mb-1 text-[10px] uppercase tracking-wider text-slate-400">Current verdict</div>
+            <div className="mb-1 text-[11px] uppercase tracking-wider text-slate-400">Current verdict</div>
             <div className="mb-1 text-xl font-bold text-slate-100 sm:text-2xl">{verdict.title}</div>
             <p className="text-sm text-slate-300">{verdict.detail}</p>
           </div>
@@ -118,10 +120,10 @@ export default function RiskPage() {
                 className="h-2 w-2 rounded-full"
                 style={{ background: RISK_LEVEL_COLOR[g.level] }}
               />
-              <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: RISK_LEVEL_COLOR[g.level] }}>
+              <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: RISK_LEVEL_COLOR[g.level] }}>
                 {g.level}
               </span>
-              <span className="text-[10px] text-slate-600">
+              <span className="text-[11px] text-slate-600">
                 {g.level === "LOW" ? "0–24" : g.level === "MODERATE" ? "25–49" : g.level === "HIGH" ? "50–74" : "75–100"}
               </span>
             </div>
@@ -138,32 +140,32 @@ export default function RiskPage() {
             <button
               type="button"
               onClick={() => setSelectedZone(null)}
-              className={`text-[10px] uppercase tracking-wider ${
+              className={`text-[11px] uppercase tracking-wider ${
                 selectedZone ? "text-sky-300 hover:text-sky-200" : "text-slate-600"
               }`}
             >
               Whole mine
             </button>
           </div>
-          <p className="mb-3 text-xs text-slate-500">Tap a zone to see why it scored that way</p>
-          <div className="space-y-2">
-            {report.zones.map((z) => {
+          <p className="mb-3 text-xs text-slate-500">Riskiest first · tap a zone to see why it scored that way</p>
+          <div className="space-y-1.5">
+            {rankedZones.map((z) => {
               const active = selectedZone === z.zoneId;
               return (
                 <button
                   key={z.zoneId}
                   type="button"
                   onClick={() => setSelectedZone(active ? null : z.zoneId)}
-                  className={`w-full rounded-lg border px-3 py-2.5 text-left transition ${
+                  className={`w-full rounded-lg border px-3 py-2 text-left transition ${
                     active
                       ? "border-slate-400 bg-panel"
                       : "border-border/70 bg-panel hover:border-slate-500"
                   }`}
                 >
-                  <div className="mb-1.5 flex items-center justify-between gap-2">
+                  <div className="mb-1 flex items-center justify-between gap-2">
                     <div className="min-w-0">
                       <div className="truncate text-sm font-semibold text-slate-100">{zoneName(z.zoneId)}</div>
-                      <div className="text-[10px] text-slate-500">
+                      <div className="text-xs text-slate-500">
                         {z.minerCount} miner{z.minerCount === 1 ? "" : "s"}
                         {" · "}
                         {z.activeAlerts} alert{z.activeAlerts === 1 ? "" : "s"}
@@ -188,7 +190,7 @@ export default function RiskPage() {
 
         {/* Detail panel */}
         <section className="rounded-lg border border-border bg-panel2 p-4">
-          <div className="mb-1 text-[10px] uppercase tracking-wider text-slate-500">
+          <div className="mb-1 text-[11px] uppercase tracking-wider text-slate-500">
             {selectedZone ? "Selected zone" : "Mine-wide detail"}
           </div>
           <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -199,7 +201,7 @@ export default function RiskPage() {
 
           <RiskBar score={focus.score} level={focus.level} />
 
-          <div className="mt-4 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <div className="mt-4 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Why this score
           </div>
           {focus.factors.length === 0 ? (
@@ -213,9 +215,9 @@ export default function RiskPage() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <div className="text-sm font-semibold text-slate-100">{f.label}</div>
-                      <div className="text-xs text-slate-400">{plainFactor(f.detail)}</div>
+                      <div className="text-xs text-slate-400">{plainFactor(f.detail, knownZones)}</div>
                     </div>
-                    <span className="shrink-0 rounded bg-status-warning/15 px-1.5 py-0.5 font-mono text-[10px] text-status-warning">
+                    <span className="shrink-0 rounded bg-status-warning/15 px-1.5 py-0.5 font-mono text-[11px] text-status-warning">
                       +{f.weight.toFixed(0)} pts
                     </span>
                   </div>
@@ -224,7 +226,7 @@ export default function RiskPage() {
             </ul>
           )}
 
-          <div className="mt-4 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <div className="mt-4 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">
             What to do next
           </div>
           <ol className="mb-4 list-decimal space-y-1.5 pl-4 text-sm text-slate-200">
@@ -234,22 +236,13 @@ export default function RiskPage() {
           </ol>
 
           <div className="flex flex-wrap gap-2">
-            <Link
-              to="/alerts"
-              className="rounded bg-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-100 hover:bg-slate-600"
-            >
+            <Link to="/alerts" className="btn btn-secondary">
               Open alerts
             </Link>
-            <Link
-              to="/miners"
-              className="rounded bg-sky-500/20 px-3 py-1.5 text-xs font-semibold text-sky-300 hover:bg-sky-500/30"
-            >
+            <Link to="/miners" className="btn btn-primary">
               Open miners
             </Link>
-            <Link
-              to="/"
-              className="rounded bg-panel px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-slate-100"
-            >
+            <Link to="/" className="btn btn-ghost">
               Live map
             </Link>
           </div>
@@ -293,9 +286,11 @@ function verdictLine(overall: ZoneRisk, hotZones: ZoneRisk[]) {
   };
 }
 
-function plainFactor(detail: string) {
+function plainFactor(detail: string, knownZones: Set<string>) {
   // Strip redundant zone prefixes like "VERT_EAST: ..." when already in zone context
-  return detail.replace(/^[A-Z_]+:\s*/, "");
+  return detail
+    .replace(/^[A-Z0-9_]+:\s*/, "")
+    .replace(/\b[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+\b/g, (id) => (knownZones.has(id) ? placeName(id) : id));
 }
 
 function ScoreDial({ score, level }: { score: number; level: RiskLevel }) {
@@ -305,7 +300,7 @@ function ScoreDial({ score, level }: { score: number; level: RiskLevel }) {
       <div className="font-mono text-4xl font-bold leading-none" style={{ color }}>
         {score.toFixed(0)}
       </div>
-      <div className="mt-1 text-[10px] uppercase tracking-wider text-slate-500">risk / 100</div>
+      <div className="mt-1 text-[11px] uppercase tracking-wider text-slate-500">risk / 100</div>
       <LevelPill level={level} />
     </div>
   );
@@ -314,7 +309,7 @@ function ScoreDial({ score, level }: { score: number; level: RiskLevel }) {
 function LevelPill({ level }: { level: RiskLevel }) {
   return (
     <span
-      className="rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+      className="rounded px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider"
       style={{
         background: RISK_LEVEL_COLOR[level] + "33",
         color: RISK_LEVEL_COLOR[level],

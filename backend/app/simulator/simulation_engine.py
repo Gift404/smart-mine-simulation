@@ -16,7 +16,7 @@ callable, not directly on MqttBus, so it can be unit tested without a broker.
 from __future__ import annotations
 from typing import Callable
 
-from app.config import MINE_CONFIG, WORKERS_CONFIG, GATEWAYS_CONFIG, THRESHOLDS_CONFIG, SENSORS_CONFIG, VEHICLES_CONFIG, GEOFENCES_CONFIG
+from app.config import SIMULATIONS, DEFAULT_SIMULATION_ID, SimulationConfig
 from app.simulator.mine import MineGraph
 from app.simulator.workers import WorkerSimulator, nearest_gateway_id
 from app.simulator.gateways import GatewaySimulator
@@ -44,19 +44,21 @@ pos_log = get_logger("POSITION")
 
 
 class SimulationEngine:
-    def __init__(self, publish: PublishFn):
+    def __init__(self, publish: PublishFn, simulation: SimulationConfig | None = None):
         self.publish = publish
-        self.mine = MineGraph(MINE_CONFIG)
-        self.worker_sim = WorkerSimulator(self.mine, WORKERS_CONFIG)
-        self.gateway_sim = GatewaySimulator(GATEWAYS_CONFIG)
+        self.simulation = simulation or SIMULATIONS[DEFAULT_SIMULATION_ID]
+        cfg = self.simulation
+        self.mine = MineGraph(cfg.mine)
+        self.worker_sim = WorkerSimulator(self.mine, cfg.workers)
+        self.gateway_sim = GatewaySimulator(cfg.gateways)
         self.radio_sim = RadioSimulator(self.gateway_sim)
         self.wearable_sim = WearableSimulator()
-        self.sensor_sim = SensorSimulator(SENSORS_CONFIG)
-        self.vehicle_sim = VehicleSimulator(self.mine, VEHICLES_CONFIG)
+        self.sensor_sim = SensorSimulator(cfg.sensors)
+        self.vehicle_sim = VehicleSimulator(self.mine, cfg.vehicles)
         self.scenario_engine = ScenarioEngine(self.wearable_sim, self.worker_sim.workers, self.mine)
-        self.thresholds = Thresholds.load(THRESHOLDS_CONFIG)
+        self.thresholds = Thresholds.load(cfg.thresholds)
         self.alert_engine = AlertEngine(self.thresholds)
-        self.geofence_engine = GeofenceEngine(GEOFENCES_CONFIG, self.mine, self.alert_engine)
+        self.geofence_engine = GeofenceEngine(cfg.geofences, self.mine, self.alert_engine)
         self.job_engine = JobEngine()
         self.imu_tracker = ImuFusionTracker(self.mine)
 
@@ -92,14 +94,14 @@ class SimulationEngine:
             )
 
         log.info(
-            "engine initialized workers=%d vehicles=%d gateways=%d sensors=%d portals=%d",
-            len(self.worker_sim.workers), len(self.vehicle_sim.vehicles),
+            "engine initialized simulation=%s workers=%d vehicles=%d gateways=%d sensors=%d portals=%d",
+            self.simulation.id, len(self.worker_sim.workers), len(self.vehicle_sim.vehicles),
             len(self.gateway_sim.gateways), len(self.sensor_sim.sensors), len(self.mine.portals),
         )
 
     def reset(self) -> None:
         log.info("simulation reset")
-        self.__init__(self.publish)
+        self.__init__(self.publish, self.simulation)
 
     def tick(self, dt_s: float) -> None:
         if not self.running:
@@ -122,6 +124,14 @@ class SimulationEngine:
         self._check_geofences()
         self._check_comm_loss()
         self._update_mine_sensors()
+        self._publish_alert_changes()
+
+    def _publish_alert_changes(self) -> None:
+        """Broadcast auto-resolved alerts so dashboards drop them without a reload."""
+        for alert in self.alert_engine.drain_changed():
+            worker = self.worker_sim.workers.get(alert.worker_id)
+            tag_id = worker.wearable_id if worker else alert.worker_id
+            self.publish(topics.alert_topic(tag_id), alert.model_dump())
 
     def _check_geofences(self) -> None:
         """Restricted-area entry → watch vibrate + system alert / warning."""
@@ -496,10 +506,7 @@ class SimulationEngine:
         elif scenario == "clear":
             self.scenario_engine.clear(worker_id)
             for key in [f"{worker_id}:FALL_DETECTED", f"{worker_id}:PANIC_BUTTON"]:
-                alert = self.alert_engine.active_alerts.pop(key, None)
-                if alert:
-                    from app.models.alert import AlertStatus
-                    alert.status = AlertStatus.RESOLVED
-                    alert.resolved_sim_ts = self.sim_time_s
+                self.alert_engine.mark_resolved(key, self.sim_time_s)
+            self._publish_alert_changes()
         else:
             raise ValueError(f"unknown scenario: {scenario}")

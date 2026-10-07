@@ -442,9 +442,11 @@ for lv in LEVELS:
             "unit": unit,
             "linked_gateway_id": f"GW-{(sid - 1) % max(1, len(gateways)) + 1:02d}" if gateways else None,
             "battery_pct": 85 + (sid % 10),
-            "maintenance_due_days": 30 + sid,
+            "maintenance_due_days": 60 + sid * 7,
         })
         sid += 1
+# Exactly one unit is due for service (shows as "Degraded" on the Systems page: due ≤ 45 days)
+next(s for s in reversed(sensors) if s["sensor_type"] == "AIRFLOW")["maintenance_due_days"] = 21
 
 # ---------------------------------------------------------------------------
 # Write configs

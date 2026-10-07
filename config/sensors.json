@@ -12,7 +12,7 @@
       "unit": "%LEL",
       "linked_gateway_id": "GW-01",
       "battery_pct": 86,
-      "maintenance_due_days": 31
+      "maintenance_due_days": 67
     },
     {
       "sensor_id": "ES-02",
@@ -26,7 +26,7 @@
       "unit": "%",
       "linked_gateway_id": "GW-02",
       "battery_pct": 87,
-      "maintenance_due_days": 32
+      "maintenance_due_days": 74
     },
     {
       "sensor_id": "ES-03",
@@ -40,7 +40,7 @@
       "unit": "m/s",
       "linked_gateway_id": "GW-03",
       "battery_pct": 88,
-      "maintenance_due_days": 33
+      "maintenance_due_days": 81
     },
     {
       "sensor_id": "ES-04",
@@ -54,7 +54,7 @@
       "unit": "%LEL",
       "linked_gateway_id": "GW-04",
       "battery_pct": 89,
-      "maintenance_due_days": 34
+      "maintenance_due_days": 88
     },
     {
       "sensor_id": "ES-05",
@@ -68,7 +68,7 @@
       "unit": "%",
       "linked_gateway_id": "GW-05",
       "battery_pct": 90,
-      "maintenance_due_days": 35
+      "maintenance_due_days": 95
     },
     {
       "sensor_id": "ES-06",
@@ -82,7 +82,7 @@
       "unit": "m/s",
       "linked_gateway_id": "GW-06",
       "battery_pct": 91,
-      "maintenance_due_days": 36
+      "maintenance_due_days": 102
     },
     {
       "sensor_id": "ES-07",
@@ -96,7 +96,7 @@
       "unit": "%LEL",
       "linked_gateway_id": "GW-07",
       "battery_pct": 92,
-      "maintenance_due_days": 37
+      "maintenance_due_days": 109
     },
     {
       "sensor_id": "ES-08",
@@ -110,7 +110,7 @@
       "unit": "%",
       "linked_gateway_id": "GW-08",
       "battery_pct": 93,
-      "maintenance_due_days": 38
+      "maintenance_due_days": 116
     },
     {
       "sensor_id": "ES-09",
@@ -124,7 +124,7 @@
       "unit": "m/s",
       "linked_gateway_id": "GW-09",
       "battery_pct": 94,
-      "maintenance_due_days": 39
+      "maintenance_due_days": 123
     },
     {
       "sensor_id": "ES-10",
@@ -138,7 +138,7 @@
       "unit": "%LEL",
       "linked_gateway_id": "GW-10",
       "battery_pct": 85,
-      "maintenance_due_days": 40
+      "maintenance_due_days": 130
     },
     {
       "sensor_id": "ES-11",
@@ -152,7 +152,7 @@
       "unit": "%",
       "linked_gateway_id": "GW-11",
       "battery_pct": 86,
-      "maintenance_due_days": 41
+      "maintenance_due_days": 137
     },
     {
       "sensor_id": "ES-12",
@@ -166,7 +166,7 @@
       "unit": "m/s",
       "linked_gateway_id": "GW-12",
       "battery_pct": 87,
-      "maintenance_due_days": 42
+      "maintenance_due_days": 21
     }
   ]
 }

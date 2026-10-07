@@ -1,0 +1,488 @@
+{
+  "coverage_radius_m": 110,
+  "path_loss_exponent": 2.9,
+  "reference_rssi_at_1m": -40,
+  "noise_std_db": 4.0,
+  "gateways": [
+    {
+      "gateway_id": "GW-01",
+      "name": "Platreef schematic · L750 · Beacon",
+      "x": 168.0,
+      "y": -750.0,
+      "z": -97.0,
+      "zone_id": "L750_STATION",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-02",
+      "name": "Platreef schematic · L850 · Beacon",
+      "x": 168.0,
+      "y": -850.0,
+      "z": -97.0,
+      "zone_id": "L850_STATION",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-03",
+      "name": "Platreef schematic · L950 · Beacon",
+      "x": 168.0,
+      "y": -950.0,
+      "z": -97.0,
+      "zone_id": "L950_STATION",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-04",
+      "name": "Platreef schematic · L750 · Beacon",
+      "x": -12.0,
+      "y": -750.0,
+      "z": -72.0,
+      "zone_id": "L750_WEST",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-05",
+      "name": "Platreef schematic · L750 · Beacon",
+      "x": -172.0,
+      "y": -750.0,
+      "z": -72.0,
+      "zone_id": "L750_WEST",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-06",
+      "name": "Platreef schematic · L750 · Beacon",
+      "x": -330.3333333333333,
+      "y": -750.0,
+      "z": -72.0,
+      "zone_id": "L750_WEST",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-07",
+      "name": "Platreef schematic · L750 · Beacon",
+      "x": -413.66666666666663,
+      "y": -750.0,
+      "z": -72.0,
+      "zone_id": "L750_WEST",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-08",
+      "name": "Platreef schematic · L850 · Beacon",
+      "x": -17.0,
+      "y": -850.0,
+      "z": -72.0,
+      "zone_id": "L850_WEST",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-09",
+      "name": "Platreef schematic · L850 · Beacon",
+      "x": -107.0,
+      "y": -850.0,
+      "z": -72.0,
+      "zone_id": "L850_WEST",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-10",
+      "name": "Platreef schematic · L850 · Beacon",
+      "x": -292.5,
+      "y": -850.0,
+      "z": -72.0,
+      "zone_id": "L850_WEST",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-11",
+      "name": "Platreef schematic · L950 · Beacon",
+      "x": -12.0,
+      "y": -950.0,
+      "z": -72.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-12",
+      "name": "Platreef schematic · L950 · Beacon",
+      "x": -172.0,
+      "y": -950.0,
+      "z": -72.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-13",
+      "name": "Platreef schematic · L950 · Beacon",
+      "x": -317.5,
+      "y": -950.0,
+      "z": -72.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-14",
+      "name": "Platreef schematic · L950 · Beacon",
+      "x": -465.25,
+      "y": -950.0,
+      "z": -72.0,
+      "zone_id": "L950_ORE_DRIVE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-15",
+      "name": "Platreef schematic · L950 · Beacon",
+      "x": -542.5,
+      "y": -950.0,
+      "z": -72.0,
+      "zone_id": "L950_ORE_DRIVE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-16",
+      "name": "Platreef schematic · L950 · Beacon",
+      "x": -619.75,
+      "y": -950.0,
+      "z": -72.0,
+      "zone_id": "L950_ORE_DRIVE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-17",
+      "name": "Platreef schematic · L950 · Beacon",
+      "x": -777.6,
+      "y": -950.0,
+      "z": -72.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-18",
+      "name": "Platreef schematic · L950 · Beacon",
+      "x": -858.2,
+      "y": -950.0,
+      "z": -72.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-19",
+      "name": "Platreef schematic · L950 · Beacon",
+      "x": -938.8,
+      "y": -950.0,
+      "z": -72.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-20",
+      "name": "Platreef schematic · L950 · Beacon",
+      "x": -1019.4000000000001,
+      "y": -950.0,
+      "z": -72.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-21",
+      "name": "Platreef schematic · L950 · Beacon",
+      "x": 28.0,
+      "y": -950.0,
+      "z": -107.0,
+      "zone_id": "L950_STATION",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-22",
+      "name": "Platreef schematic · L750 · Shaft 1 · 750 m",
+      "x": 3.0,
+      "y": -750.0,
+      "z": -2.0,
+      "zone_id": "L750_STATION",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-23",
+      "name": "Platreef schematic · L850 · Shaft 1 · 850 m",
+      "x": 3.0,
+      "y": -850.0,
+      "z": -2.0,
+      "zone_id": "L850_STATION",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-24",
+      "name": "Platreef schematic · L950 · Shaft 1 · 950 m",
+      "x": 3.0,
+      "y": -950.0,
+      "z": -2.0,
+      "zone_id": "L950_STATION",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-25",
+      "name": "Platreef schematic · L996 · Shaft 1 · 996 m",
+      "x": 3.0,
+      "y": -996.0,
+      "z": -2.0,
+      "zone_id": "L996_STATION",
+      "level_id": "L996",
+      "depth_m": -996.0
+    },
+    {
+      "gateway_id": "GW-26",
+      "name": "Platreef schematic · L750 · Shaft 2 · 750 m",
+      "x": 73.0,
+      "y": -750.0,
+      "z": -72.0,
+      "zone_id": "L750_STATION",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-27",
+      "name": "Platreef schematic · L850 · Shaft 2 · 850 m",
+      "x": 73.0,
+      "y": -850.0,
+      "z": -72.0,
+      "zone_id": "L850_STATION",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-28",
+      "name": "Platreef schematic · L950 · Shaft 2 · 950 m",
+      "x": 73.0,
+      "y": -950.0,
+      "z": -72.0,
+      "zone_id": "L950_STATION",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-29",
+      "name": "Platreef schematic · L996 · Shaft 2 · 996 m",
+      "x": 73.0,
+      "y": -996.0,
+      "z": -72.0,
+      "zone_id": "L996_STATION",
+      "level_id": "L996",
+      "depth_m": -996.0
+    },
+    {
+      "gateway_id": "GW-30",
+      "name": "Platreef schematic · L1090 · Shaft 2 loading station",
+      "x": 73.0,
+      "y": -1090.0,
+      "z": -72.0,
+      "zone_id": "L1090_CRUSHER",
+      "level_id": "L1090",
+      "depth_m": -1090.0
+    },
+    {
+      "gateway_id": "GW-31",
+      "name": "Platreef schematic · L750 · Shaft 3 · 750 m",
+      "x": 263.0,
+      "y": -750.0,
+      "z": -122.0,
+      "zone_id": "L750_STATION",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-32",
+      "name": "Platreef schematic · L850 · Shaft 3 · 850 m",
+      "x": 263.0,
+      "y": -850.0,
+      "z": -122.0,
+      "zone_id": "L850_STATION",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-33",
+      "name": "Platreef schematic · L950 · Shaft 3 · 950 m",
+      "x": 263.0,
+      "y": -950.0,
+      "z": -122.0,
+      "zone_id": "L950_STATION",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-34",
+      "name": "Platreef schematic · L750 · Ventilation raise 1",
+      "x": -497.0,
+      "y": -750.0,
+      "z": -72.0,
+      "zone_id": "L750_WEST",
+      "level_id": "L750",
+      "depth_m": -750.0
+    },
+    {
+      "gateway_id": "GW-35",
+      "name": "Platreef schematic · L850 · 850 west drift",
+      "x": -197.0,
+      "y": -850.0,
+      "z": -72.0,
+      "zone_id": "L850_WEST",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-36",
+      "name": "Platreef schematic · L850 · Explosives magazine",
+      "x": -197.0,
+      "y": -850.0,
+      "z": -172.0,
+      "zone_id": "L850_WEST",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-37",
+      "name": "Platreef schematic · L850 · 850 ore drive junction",
+      "x": -388.0,
+      "y": -850.0,
+      "z": -72.0,
+      "zone_id": "L850_ORE_DRIVE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-38",
+      "name": "Platreef schematic · L850 · 850 strike drive N1",
+      "x": -388.0,
+      "y": -850.0,
+      "z": -172.0,
+      "zone_id": "L850_ORE_DRIVE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-39",
+      "name": "Platreef schematic · L850 · 850 strike drive S1",
+      "x": -388.0,
+      "y": -850.0,
+      "z": 28.0,
+      "zone_id": "L850_ORE_DRIVE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-40",
+      "name": "Platreef schematic · L850 · 850 strike drive S2",
+      "x": -388.0,
+      "y": -850.0,
+      "z": 128.0,
+      "zone_id": "L850_ORE_DRIVE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-41",
+      "name": "Platreef schematic · L850 · 850 strike drive south end",
+      "x": -388.0,
+      "y": -850.0,
+      "z": 228.0,
+      "zone_id": "L850_ORE_DRIVE",
+      "level_id": "L850",
+      "depth_m": -850.0
+    },
+    {
+      "gateway_id": "GW-42",
+      "name": "Platreef schematic · L950 · 950 ore drive junction",
+      "x": -1100.0,
+      "y": -950.0,
+      "z": -72.0,
+      "zone_id": "L950_ORE_DRIVE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-43",
+      "name": "Platreef schematic · L950 · 950 strike drive N1",
+      "x": -1100.0,
+      "y": -950.0,
+      "z": -172.0,
+      "zone_id": "L950_ORE_DRIVE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-44",
+      "name": "Platreef schematic · L950 · 950 strike drive S1",
+      "x": -1100.0,
+      "y": -950.0,
+      "z": 28.0,
+      "zone_id": "L950_ORE_DRIVE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-45",
+      "name": "Platreef schematic · L950 · 950 strike drive S2",
+      "x": -1100.0,
+      "y": -950.0,
+      "z": 128.0,
+      "zone_id": "L950_ORE_DRIVE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-46",
+      "name": "Platreef schematic · L950 · Ventilation raise 3",
+      "x": -1100.0,
+      "y": -950.0,
+      "z": 228.0,
+      "zone_id": "L950_ORE_DRIVE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-47",
+      "name": "Platreef schematic · L950 · Substation 950",
+      "x": -97.0,
+      "y": -950.0,
+      "z": -122.0,
+      "zone_id": "L950_HAULAGE",
+      "level_id": "L950",
+      "depth_m": -950.0
+    },
+    {
+      "gateway_id": "GW-48",
+      "name": "Platreef schematic · SURFACE · Shaft 1 collar",
+      "x": 3.0,
+      "y": 0.0,
+      "z": -2.0,
+      "zone_id": "SURFACE",
+      "level_id": "SURFACE",
+      "depth_m": 0.0
+    }
+  ]
+}

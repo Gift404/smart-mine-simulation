@@ -9,6 +9,7 @@ export default function WorkerPanel({
   onSelectWorker,
   onStartTracking,
   onStopTracking,
+  bare = false,
 }: {
   state: LiveState;
   workerId: string | null;
@@ -16,38 +17,42 @@ export default function WorkerPanel({
   onSelectWorker: (id: string) => void;
   onStartTracking: (id: string) => void;
   onStopTracking: () => void;
+  /** Render only the miner list, for embedding in another panel */
+  bare?: boolean;
 }) {
   const workers = Object.values(state.workers).sort((a, b) => a.worker_id.localeCompare(b.worker_id));
 
+  const list = workers.length === 0 ? (
+    <p className="text-sm text-slate-500">Waiting for worker roster…</p>
+  ) : (
+    <div className="min-h-0 flex-1 overflow-y-auto pr-0.5">
+      <div className="grid grid-cols-2 gap-2">
+        {workers.map((w) => (
+          <MinerCard
+            key={w.worker_id}
+            worker={w}
+            telemetry={state.telemetryByTag[w.wearable_id]}
+            position={state.positionByTag[w.wearable_id]}
+            alerts={state.alerts}
+            selected={w.worker_id === workerId}
+            tracking={w.worker_id === trackingId}
+            onSelect={() => onSelectWorker(w.worker_id)}
+            onTrack={() => onStartTracking(w.worker_id)}
+            onStopTrack={onStopTracking}
+          />
+        ))}
+      </div>
+    </div>
+  );
+
+  if (bare) return list;
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-border bg-panel2 p-3">
       <div className="mb-2 flex shrink-0 items-baseline justify-between gap-2">
         <h2 className="text-sm font-bold uppercase tracking-wide text-slate-300">Miners</h2>
         <span className="text-[10px] uppercase tracking-wider text-slate-500">{workers.length} underground</span>
       </div>
-
-      {workers.length === 0 ? (
-        <p className="text-sm text-slate-500">Waiting for worker roster…</p>
-      ) : (
-        <div className="min-h-0 flex-1 overflow-y-auto pr-0.5">
-          <div className="grid grid-cols-2 gap-2">
-            {workers.map((w) => (
-              <MinerCard
-                key={w.worker_id}
-                worker={w}
-                telemetry={state.telemetryByTag[w.wearable_id]}
-                position={state.positionByTag[w.wearable_id]}
-                alerts={state.alerts}
-                selected={w.worker_id === workerId}
-                tracking={w.worker_id === trackingId}
-                onSelect={() => onSelectWorker(w.worker_id)}
-                onTrack={() => onStartTracking(w.worker_id)}
-                onStopTrack={onStopTracking}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      {list}
     </div>
   );
 }

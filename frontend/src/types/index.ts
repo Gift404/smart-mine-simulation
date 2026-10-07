@@ -34,6 +34,7 @@ export interface MineEdge {
 }
 
 export interface MineGraph {
+  simulation_id?: string;
   name: string;
   coordinate_system?: Record<string, string | number>;
   levels?: MineLevel[];
@@ -41,6 +42,37 @@ export interface MineGraph {
   edges: MineEdge[];
   zones?: string[];
   portals?: MinePortal[];
+  stopes?: MineStope[];
+  /** Stope block size [east, height, north] in metres */
+  stope_size_m?: [number, number, number] | null;
+  view?: MineView | null;
+}
+
+export interface MineStope {
+  id: string;
+  x: number;
+  y: number;
+  z: number;
+  state: string;
+  grade?: number;
+  tonnes?: number;
+  level_id?: string;
+}
+
+/** Default 3D framing for a mine layout */
+export interface MineView {
+  target: [number, number, number];
+  camera_offset: [number, number, number];
+  overview_distance: number;
+  /** Translucent level-plane footprint: centre [east, north] and half-size in metres */
+  level_plane?: { center: [number, number]; half_size: number };
+}
+
+export interface SimulationInfo {
+  id: string;
+  name: string;
+  description: string;
+  active: boolean;
 }
 
 export interface MinePortal {
@@ -243,6 +275,7 @@ export interface Geofence {
 }
 
 export interface SimulationStatus {
+  simulation_id?: string;
   running: boolean;
   sim_time_s: number;
   speed_multiplier: number;

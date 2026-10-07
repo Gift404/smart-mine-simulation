@@ -55,7 +55,7 @@ class VehicleSimulator:
                 distance_along_edge_m=dist,
                 direction=1,
                 x=x, y=y, z=z,
-                level=mine.level_at_edge(edge_id) or mine.level_for_depth(y),
+                level=mine.level_at(edge_id, y),
                 speed_mps=float(vcfg.get("speed_mps", 2.5)),
                 phase=HaulPhase.TRAVEL_TO_LOAD,
                 cargo_fill=0.0,
@@ -172,7 +172,7 @@ class VehicleSimulator:
                 remaining = 0
 
         v.x, v.y, v.z = self.mine.point_on_edge(v.current_edge_id, v.distance_along_edge_m)
-        v.level = self.mine.level_at_edge(v.current_edge_id) or self.mine.level_for_depth(v.y)
+        v.level = self.mine.level_at(v.current_edge_id, v.y)
         v.heading_deg = self.mine.heading_on_edge(v.current_edge_id, v.direction)
 
     def _arrive(self, v: Vehicle, sim_time_s: float) -> None:

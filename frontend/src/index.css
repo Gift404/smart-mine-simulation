@@ -14,3 +14,39 @@ body {
   background: #2a3441;
   border-radius: 4px;
 }
+
+@layer components {
+  /* Content pages scroll inside the fixed shell on desktop and as a normal page below lg */
+  .page {
+    @apply p-4 sm:p-6 lg:h-full lg:overflow-y-auto;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-sm {
+    @apply px-2.5 py-1 text-[11px];
+  }
+  .btn-primary {
+    @apply bg-sky-500/20 text-sky-200 hover:bg-sky-500/30;
+  }
+  .btn-secondary {
+    @apply bg-slate-700 text-slate-100 hover:bg-slate-600;
+  }
+  .btn-ghost {
+    @apply bg-panel text-slate-300 hover:bg-slate-700/60 hover:text-white;
+  }
+  .btn-active {
+    @apply bg-sky-500/30 text-sky-100 ring-1 ring-sky-400/50 hover:bg-sky-500/40;
+  }
+
+  .chip {
+    @apply rounded-md px-2.5 py-1 text-xs font-semibold transition-colors duration-150;
+  }
+  .chip-off {
+    @apply bg-panel2 text-slate-400 hover:text-slate-200;
+  }
+  .chip-on {
+    @apply bg-slate-600 text-slate-100;
+  }
+}

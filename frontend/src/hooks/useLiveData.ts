@@ -1,12 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../services/api";
 import { connectLiveSocket } from "../services/websocket";
 import type {
   Worker, Gateway, Alert, Job, SimulationStatus, Telemetry, PositionEstimate, WsMessage, MineGraph,
-  SignalSample, MineSensor, Vehicle, Geofence,
+  SignalSample, MineSensor, Vehicle, Geofence, SimulationInfo,
 } from "../types";
 
 export interface LiveState {
+  simulations: SimulationInfo[];
   mine: MineGraph | null;
   workers: Record<string, Worker>;
   vehicles: Record<string, Vehicle>;
@@ -24,49 +25,105 @@ export interface LiveState {
 }
 
 const MAX_HISTORY_POINTS = 600; // ~ plenty for a 30 min window at burst-mode cadence
+const SIMULATION_TOPIC = "mine/section3/simulation/active";
+
+const EMPTY_STATE: LiveState = {
+  simulations: [],
+  mine: null, workers: {}, vehicles: {}, gateways: {}, sensors: {}, alerts: {}, jobs: {},
+  geofences: [],
+  status: null, telemetryByTag: {}, telemetryHistoryByTag: {}, positionByTag: {},
+  signalByTag: {}, signalHistoryByTag: {},
+};
 
 export function useLiveData() {
-  const [state, setState] = useState<LiveState>({
-    mine: null, workers: {}, vehicles: {}, gateways: {}, sensors: {}, alerts: {}, jobs: {},
-    geofences: [],
-    status: null, telemetryByTag: {}, telemetryHistoryByTag: {}, positionByTag: {},
-    signalByTag: {}, signalHistoryByTag: {},
-  });
+  const [state, setState] = useState<LiveState>(EMPTY_STATE);
+  const [switching, setSwitching] = useState(false);
   const signalBuffer = useRef<Record<string, Record<string, number>>>({});
+  const loadedSimulationId = useRef<string | null>(null);
+  const switchingRef = useRef(false);
+  const reloadingRef = useRef(false);
+  const reloadPendingRef = useRef(false);
 
-  // bootstrap from REST, then poll status/alerts/jobs periodically as a safety net
-  useEffect(() => {
-    async function bootstrap() {
-      const [mine, workers, vehicles, gateways, sensors, alerts, jobs, geofences, status] = await Promise.all([
-        api.mine(), api.workers(), api.vehicles(), api.gateways(), api.sensors(), api.alerts(), api.jobs(),
-        api.geofences().catch(() => [] as Geofence[]), api.status(),
-      ]);
-      setState((s) => ({
-        ...s,
-        mine,
-        workers: Object.fromEntries(workers.map((w) => [w.worker_id, w])),
-        vehicles: Object.fromEntries(vehicles.map((v) => [v.vehicle_id, v])),
-        gateways: Object.fromEntries(gateways.map((g) => [g.gateway_id, g])),
-        sensors: Object.fromEntries(sensors.map((x) => [x.sensor_id, x])),
-        alerts: Object.fromEntries(alerts.map((a) => [a.alert_id, a])),
-        jobs: Object.fromEntries(jobs.map((j) => [j.job_id, j])),
-        geofences,
-        status,
-      }));
+  /** Replace all state from REST (initial load and after a simulation switch). */
+  const reload = useCallback(async () => {
+    if (reloadingRef.current) {
+      reloadPendingRef.current = true;
+      return;
     }
-    bootstrap().catch(console.error);
+    reloadingRef.current = true;
+    try {
+      do {
+        reloadPendingRef.current = false;
+        const [simulations, mine, workers, vehicles, gateways, sensors, alerts, jobs, geofences, status] = await Promise.all([
+          api.simulations().catch(() => [] as SimulationInfo[]),
+          api.mine(), api.workers(), api.vehicles(), api.gateways(), api.sensors(), api.alerts(), api.jobs(),
+          api.geofences().catch(() => [] as Geofence[]), api.status(),
+        ]);
+        signalBuffer.current = {};
+        loadedSimulationId.current = mine.simulation_id ?? null;
+        setState({
+          ...EMPTY_STATE,
+          simulations,
+          mine,
+          workers: Object.fromEntries(workers.map((w) => [w.worker_id, w])),
+          vehicles: Object.fromEntries(vehicles.map((v) => [v.vehicle_id, v])),
+          gateways: Object.fromEntries(gateways.map((g) => [g.gateway_id, g])),
+          sensors: Object.fromEntries(sensors.map((x) => [x.sensor_id, x])),
+          alerts: Object.fromEntries(alerts.map((a) => [a.alert_id, a])),
+          jobs: Object.fromEntries(jobs.map((j) => [j.job_id, j])),
+          geofences,
+          status,
+        });
+      } while (reloadPendingRef.current);
+    } finally {
+      reloadingRef.current = false;
+    }
+  }, []);
+
+  const switchSimulation = useCallback(async (simulationId: string) => {
+    if (switchingRef.current || simulationId === loadedSimulationId.current) return;
+    switchingRef.current = true;
+    setSwitching(true);
+    try {
+      await api.activateSimulation(simulationId);
+      await reload();
+    } finally {
+      switchingRef.current = false;
+      setSwitching(false);
+    }
+  }, [reload]);
+
+  // bootstrap from REST, then poll status periodically as a safety net
+  useEffect(() => {
+    reload().catch(console.error);
     // Light poll — live data comes from WebSocket; don't hammer a busy API
     const interval = setInterval(() => {
       api.status()
-        .then((status) => setState((s) => ({ ...s, status })))
+        .then((status) => {
+          const changed = status.simulation_id && loadedSimulationId.current
+            && status.simulation_id !== loadedSimulationId.current;
+          if (changed && !switchingRef.current) {
+            reload().catch(console.error);
+          } else {
+            setState((s) => ({ ...s, status }));
+          }
+        })
         .catch(() => {});
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [reload]);
 
   useEffect(() => {
     const disconnect = connectLiveSocket((msg: WsMessage) => {
       const { topic, payload } = msg;
+      // Frames from the outgoing engine can still be in flight while switching
+      if (switchingRef.current) return;
+
+      if (topic === SIMULATION_TOPIC) {
+        const id = (payload as { simulation_id?: string }).simulation_id;
+        if (id && id !== loadedSimulationId.current) reload().catch(console.error);
+        return;
+      }
 
       if (topic.includes("/vehicle/") && topic.includes("/position")) {
         const v = payload as Vehicle;
@@ -212,7 +269,7 @@ export function useLiveData() {
       }
     });
     return disconnect;
-  }, []);
+  }, [reload]);
 
-  return state;
+  return { state, switching, switchSimulation };
 }

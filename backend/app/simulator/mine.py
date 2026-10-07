@@ -111,6 +111,10 @@ class MineGraph:
             if p.get("node_id") in self.nodes
         ]
         self.portal_node_ids: set[str] = {p.node_id for p in self.portals}
+        # Display-only extras (not part of the walkable graph)
+        self.stopes: list[dict] = data.get("stopes", [])
+        self.stope_size_m: list[float] | None = data.get("stope_size_m")
+        self.view: dict | None = data.get("view")
 
         self._adjacency: dict[str, list[str]] = {n: [] for n in self.nodes}
         for e in self.edges.values():
@@ -157,6 +161,13 @@ class MineGraph:
         a, b = self.edge_endpoints(edge_id)
         mid_y = 0.5 * (a.y + b.y)
         return self.level_for_depth(mid_y)
+
+    def level_at(self, edge_id: str, y: float) -> str:
+        """Level for someone at elevation `y` on this edge — shafts and raises use their actual depth."""
+        e = self.edges.get(edge_id)
+        if e and e.level_id:
+            return e.level_id
+        return self.level_for_depth(y)
 
     def level_for_depth(self, depth_m: float) -> str:
         if not self.levels:

@@ -2,6 +2,9 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLive } from "../context/LiveDataContext";
 import { api } from "../services/api";
+import { alertTypeName, placeName } from "../services/labels";
+import EmptyState from "../components/EmptyState";
+import { formatSimTime } from "../services/status";
 import type { Alert, AlertStatus, Job } from "../types";
 
 type Filter = "ALL" | AlertStatus | "CRITICAL_ONLY";
@@ -45,7 +48,7 @@ export default function AlertsPage() {
   ];
 
   return (
-    <div className="h-full overflow-y-auto p-4 sm:p-6">
+    <div className="page">
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="text-lg font-bold tracking-wide text-slate-100">Alerts &amp; Emergencies</h2>
@@ -57,9 +60,7 @@ export default function AlertsPage() {
               key={f.id}
               type="button"
               onClick={() => setFilter(f.id)}
-              className={`rounded px-2.5 py-1 text-xs font-semibold uppercase tracking-wider ${
-                filter === f.id ? "bg-slate-600 text-slate-100" : "bg-panel2 text-slate-400 hover:text-slate-200"
-              }`}
+              className={`chip ${filter === f.id ? "chip-on" : "chip-off"}`}
             >
               {f.label}
               <span className="ml-1.5 font-mono text-slate-500">{f.count}</span>
@@ -69,9 +70,15 @@ export default function AlertsPage() {
       </div>
 
       {alerts.length === 0 ? (
-        <div className="rounded-lg border border-border bg-panel2 p-8 text-center text-slate-500">
-          No alerts in this filter.
-        </div>
+        filter === "ACTIVE" || filter === "CRITICAL_ONLY" ? (
+          <EmptyState
+            tone="ok"
+            title={filter === "ACTIVE" ? "No active alerts" : "No critical alerts"}
+            hint="Everyone underground is within safe limits right now."
+          />
+        ) : (
+          <EmptyState title="Nothing here yet" hint="Alerts will appear here as the simulation runs." />
+        )
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
           {alerts.map((a) => (
@@ -108,15 +115,15 @@ function AlertCard({
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <span
-            className={`rounded px-1.5 py-0.5 text-[10px] font-bold uppercase ${
+            className={`rounded px-1.5 py-0.5 text-[11px] font-bold uppercase ${
               a.severity === "CRITICAL" ? "bg-status-critical/20 text-status-critical" : "bg-status-warning/20 text-status-warning"
             }`}
           >
             {a.severity}
           </span>
-          <span className="font-mono text-xs text-slate-400">{a.type}</span>
+          <span className="text-sm font-medium text-slate-300">{alertTypeName(a.type)}</span>
         </div>
-        <span className="text-[10px] uppercase tracking-wider text-slate-500">{a.status}</span>
+        <span className="text-[11px] uppercase tracking-wider text-slate-400">{a.status}</span>
       </div>
 
       <div className="mb-1 text-base font-semibold text-slate-100">
@@ -126,24 +133,22 @@ function AlertCard({
         {" — "}
         {a.description}
       </div>
-      <div className="mb-3 text-xs text-slate-500">
-        Zone <span className="font-mono text-slate-300">{a.location_zone_id ?? "—"}</span>
+      <div className="mb-3 text-sm text-slate-400">
+        <span className="text-slate-200">{placeName(a.location_zone_id)}</span>
         {" · "}
-        Edge <span className="font-mono text-slate-300">{a.location_edge_id ?? "—"}</span>
-        {" · "}
-        t=<span className="font-mono">{a.created_sim_ts.toFixed(0)}s</span>
+        raised at sim time <span className="font-mono text-slate-300">{formatSimTime(a.created_sim_ts)}</span>
         {a.value != null && (
           <>
             {" · "}
-            Value <span className="font-mono text-slate-200">{a.value}</span>
-            {a.threshold != null && <> / thresh {a.threshold}</>}
+            reading <span className="font-mono text-slate-200">{a.value}</span>
+            {a.threshold != null && <> (limit {a.threshold})</>}
           </>
         )}
       </div>
 
       {jobs.length > 0 && (
         <div className="mb-3 space-y-1 rounded border border-border/60 bg-panel p-2">
-          <div className="text-[10px] uppercase tracking-wider text-slate-500">Response jobs</div>
+          <div className="text-[11px] uppercase tracking-wider text-slate-400">Response jobs</div>
           {jobs.map((j) => (
             <div key={j.job_id} className="flex items-center justify-between gap-2 text-xs">
               <span className="truncate text-slate-200">{j.title}</span>
@@ -158,15 +163,12 @@ function AlertCard({
           <button
             type="button"
             onClick={() => api.acknowledgeAlert(a.alert_id)}
-            className="rounded bg-slate-700 px-3 py-1 text-xs font-semibold text-slate-100 hover:bg-slate-600"
+            className="btn btn-secondary"
           >
             Acknowledge
           </button>
         )}
-        <Link
-          to={`/?track=${a.worker_id}`}
-          className="rounded bg-sky-500/20 px-3 py-1 text-xs font-semibold text-sky-300 hover:bg-sky-500/30"
-        >
+        <Link to={`/?track=${a.worker_id}`} className="btn btn-primary">
           Track miner
         </Link>
       </div>
