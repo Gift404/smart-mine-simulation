@@ -11,6 +11,9 @@ export default function Header({ status }: { status: SimulationStatus | null }) 
           <h1 className="truncate text-base font-bold tracking-tight text-slate-100 sm:text-lg">
             Platreef Safety Simulation
           </h1>
+          <p className="mt-0.5 truncate text-[10px] uppercase tracking-wider text-slate-500">
+            Schematic model
+          </p>
           <SimulationToggle />
         </div>
 

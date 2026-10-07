@@ -25,5 +25,6 @@ RUN chmod +x /start.sh \
     && sed -i 's/\r$//' /start.sh
 
 ENV AUTO_START=true
+ENV SIMULATION_ID=platreef_schematic
 EXPOSE 80
 CMD ["/start.sh"]

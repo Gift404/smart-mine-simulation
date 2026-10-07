@@ -4,7 +4,7 @@ from collections import deque
 import pytest
 from fastapi.testclient import TestClient
 
-from app.config import SIMULATIONS
+from app.config import INSPIRED_RECONSTRUCTION, SIMULATIONS
 from app.simulator.simulation_engine import SimulationEngine
 
 
@@ -56,7 +56,7 @@ def test_schematic_vehicles_can_reach_every_load_and_dump_point():
 
 
 def test_schematic_reuses_primary_roster_and_fleet():
-    primary = make_engine("platreef")
+    primary = SimulationEngine(publish=lambda topic, payload: None, simulation=INSPIRED_RECONSTRUCTION)
     schematic = make_engine("platreef_schematic")
     for wid, w in primary.worker_sim.workers.items():
         s = schematic.worker_sim.workers[wid]
@@ -77,20 +77,15 @@ def test_schematic_runs_and_haul_cycles_complete():
         assert w.current_edge_id in engine.mine.edges
 
 
-def test_api_switches_simulation_and_back():
+def test_api_exposes_only_schematic():
     import app.main as main
 
     client = TestClient(main.app)
-    sims = {s["id"]: s for s in client.get("/api/simulations").json()}
-    assert set(sims) == set(SIMULATIONS)
-    original = next(s for s in sims.values() if s["active"])["id"]
-    other = next(sid for sid in sims if sid != original)
-    try:
-        assert client.post(f"/api/simulations/{other}/activate").json()["simulation_id"] == other
-        mine = client.get("/api/mine").json()
-        assert mine["simulation_id"] == other
-        assert client.get("/api/simulation/status").json()["simulation_id"] == other
-        assert "error" in client.post("/api/simulations/nope/activate").json()
-    finally:
-        client.post(f"/api/simulations/{original}/activate")
-    assert client.get("/api/mine").json()["simulation_id"] == original
+    sims = client.get("/api/simulations").json()
+    assert [s["id"] for s in sims] == ["platreef_schematic"]
+    assert sims[0]["active"] is True
+    mine = client.get("/api/mine").json()
+    assert mine["simulation_id"] == "platreef_schematic"
+    assert "error" in client.post("/api/simulations/platreef/activate").json()
+    assert "error" in client.post("/api/simulations/nope/activate").json()
+    assert client.post("/api/simulations/platreef_schematic/activate").json()["simulation_id"] == "platreef_schematic"

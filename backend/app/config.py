@@ -50,23 +50,26 @@ class SimulationConfig:
     def vehicles(self) -> Path: return self.path("vehicles.json")
 
 
-SIMULATIONS: dict[str, SimulationConfig] = {
-    s.id: s for s in [
-        SimulationConfig(
-            id="platreef",
-            name="Platreef · Inspired reconstruction",
-            description="Shafts 1–5, 750–1 050 m haulage rings, spiral truck ramps, tips and stopes.",
-            directory=CONFIG_DIR,
-        ),
-        SimulationConfig(
-            id="platreef_schematic",
-            name="Platreef · Schematic model",
-            description="Shafts 1–3, 750/850/950/996 m drives, ore passes, vent raises, silos/crusher and stope blocks.",
-            directory=CONFIG_DIR / "simulations" / "platreef_schematic",
-        ),
-    ]
-}
-DEFAULT_SIMULATION_ID = os.getenv("SIMULATION_ID", "platreef")
+# Files for the retired inspired-reconstruction layout remain on disk for tests.
+INSPIRED_RECONSTRUCTION = SimulationConfig(
+    id="platreef",
+    name="Platreef · Inspired reconstruction",
+    description="Shafts 1–5, 750–1 050 m haulage rings, spiral truck ramps, tips and stopes.",
+    directory=CONFIG_DIR,
+)
+
+SCHEMATIC_MODEL = SimulationConfig(
+    id="platreef_schematic",
+    name="Platreef · Schematic model",
+    description="Shafts 1–3, 750/850/950/996 m drives, ore passes, vent raises, silos/crusher and stope blocks.",
+    directory=CONFIG_DIR / "simulations" / "platreef_schematic",
+)
+
+# Public runtime: schematic only (3D / section / 2D). Inspired reconstruction is not selectable.
+SIMULATIONS: dict[str, SimulationConfig] = {SCHEMATIC_MODEL.id: SCHEMATIC_MODEL}
+
+_requested = os.getenv("SIMULATION_ID", SCHEMATIC_MODEL.id)
+DEFAULT_SIMULATION_ID = _requested if _requested in SIMULATIONS else SCHEMATIC_MODEL.id
 
 MQTT_HOST = os.getenv("MQTT_HOST", "localhost")
 MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
